@@ -1,8 +1,10 @@
 # Specifications
 **SeoulTech_ASE_Autumn2024_Group2/Specifications**
 
-## Content
-Folder to hold all the specifications-related documents:
+## Gantt Timeline
+![Gantt.png](Gantt.png)
+
+## Folder content
 - User stories and associated requirements and tasks
 - Releases plans, organisation in time, tasks repartition
 
@@ -19,6 +21,4 @@ For the edition of documents
 - [Team Organization](https://www.canva.com/design/DAGTJCv3hRI/7faBxwbt2WOHG2TDCpoTJg/edit?utm_content=DAGTJCv3hRI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  
 - [Weekly Reports](https://www.canva.com/design/DAGTJBHjVhM/R-9AYlVWBpXRpYT5xjUZEg/edit?utm_content=DAGTJBHjVhM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  
 - [Brainstorming Draft Board](https://www.canva.com/design/DAGSr-hZxTk/7stD8M5IYpGqX-uxLq05cA/edit?utm_content=DAGSr-hZxTk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  
-
-
 
