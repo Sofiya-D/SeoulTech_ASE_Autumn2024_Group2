@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/models/todo_form_view.dart';
 
+
+// void main() {
+//   runApp(const MyApp());
+// }
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    home: TodoFormView(
+      onSubmit: (Todo todo) {
+        // Gérer la création de la tâche ici
+        print('Nouvelle tâche créée : ${todo.title}');
+      },
+    ),
+  ));
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
