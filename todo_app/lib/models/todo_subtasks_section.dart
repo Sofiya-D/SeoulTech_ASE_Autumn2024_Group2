@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/models/todo_form_data.dart';
 import 'package:todo_app/models/todo_dates_section.dart';
 import 'package:todo_app/models/todo_main_info_section.dart';
+import 'package:todo_app/models/link_manager.dart';
 
 class TodoSubtasksSection extends StatefulWidget {
   final TodoFormData formData;
@@ -174,6 +175,16 @@ class _SubtaskCardState extends State<SubtaskCard> {
                   TodoDatesSection(formData: _createSubtaskFormData()),
                   const SizedBox(height: 16),
                   ImportanceLevelSlider(formData: _createSubtaskFormData()),
+                  const SizedBox(height: 16),
+                  LinkManager(
+                    links: widget.subtask.links,
+                    onLinksUpdated: (updatedLinks) {
+                      setState(() {
+                        widget.subtask.links.clear();
+                        widget.subtask.links.addAll(updatedLinks);
+                      });
+                    },
+                  ),
                 ],
               ),
             ),

@@ -14,6 +14,7 @@ class TodoFormData {
   int importanceLevel = 1;
   String? dateError;
   final List<SubtaskFormData> subtasks = [];
+  final List<String> links = [];
 
   bool validateDates() {
     dateError = null;
@@ -48,6 +49,7 @@ class SubtaskFormData {
   DateTime? dueDate;
   int importanceLevel = 1;
   String? dateError;
+  final List<String> links = [];
 
   bool validateDates() {
     dateError = null;
