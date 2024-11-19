@@ -39,7 +39,7 @@ class MyAppState extends ChangeNotifier {
     importanceLevel: 3,
     tags: ['work', 'urgent'],
     startDate: DateTime(2024, 11, 1),
-    dueDate: DateTime(2024, 11, 10),
+    dueDate: DateTime(2024, 11, 5),
     isCompleted: false,
     points: 20,
     tasks: [
