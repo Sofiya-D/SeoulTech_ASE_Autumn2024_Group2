@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'calendar_page.dart';
+import 'cemetry_page.dart';
+import 'statistics_page.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -265,103 +269,6 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
         child: page,
-      ),
-    );
-  }
-}
-
-class StatisticsPage extends StatelessWidget {
-  const StatisticsPage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Text('This is the Statistics Page'),
-        ],
-      ),
-    );
-  }
-}
-
-class CalendarPage extends StatefulWidget {
-  @override
-  State<CalendarPage> createState() => _CalendarPageState();
-}
-
-class _CalendarPageState extends State<CalendarPage> { 
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Calendar'),
-      ),
-      body: TableCalendar(
-        firstDay: DateTime.utc(2010, 10, 16),
-        lastDay: DateTime.utc(2050, 3, 14),
-        focusedDay: _focusedDay,
-        calendarFormat: _calendarFormat,
-        selectedDayPredicate: (day) {
-          return isSameDay(_selectedDay, day);
-        },
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDay, selectedDay)) {
-            // Call `setState()` when updating the selected day
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          }
-        },
-        onFormatChanged: (format) {
-          if (_calendarFormat != format) {
-            // Call `setState()` when updating calendar format
-            setState(() {
-              _calendarFormat = format;
-            });
-          }
-        },
-        onPageChanged: (focusedDay) {
-          // No need to call `setState()` here
-          _focusedDay = focusedDay;
-        },
-      ),
-    );
-  }
-}
-
-class CemetryPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('This is the Cemetry Page'),
-          SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(Icons.plus_one),
-                label: Text('Add Task'),
-              ),
-              SizedBox(width: 10),
-            ],
-          ),
-        ],
       ),
     );
   }
