@@ -31,8 +31,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  english_words: ^4.0.0
   provider: ^6.0.0
+  table_calendar: ^3.0.9
+
+  # for date to string custom formatting
+  intl: ^0.19.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
