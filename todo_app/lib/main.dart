@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
 import 'calendar_page.dart';
 import 'cemetry_page.dart';
-// import 'statistics_page.dart';
-
+import 'statistics_page.dart';
 import 'tasks_page.dart';
 
 void main() {
@@ -275,36 +274,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class StatisticsPage extends StatelessWidget {
-  const StatisticsPage({
-    super.key,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Text('This is the Statistics Page'),
-        ],
-      ),
-    );
-  }
-}
-
-class CalendarPage extends StatelessWidget {
-  const CalendarPage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Text('This is the Calendar Page'),
-        ],
-      ),
-    );
-  }
-}
