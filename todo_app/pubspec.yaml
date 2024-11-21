@@ -32,10 +32,10 @@ dependencies:
     sdk: flutter
 
   provider: ^6.0.0
-  table_calendar: ^3.1.0
+  table_calendar: ^3.0.9
 
   # for date to string custom formatting
-  intl: ^0.18.0
+  intl: ^0.19.0
 
 
   # The following adds the Cupertino Icons font to your application.
