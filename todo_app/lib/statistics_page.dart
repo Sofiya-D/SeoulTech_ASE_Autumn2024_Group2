@@ -48,6 +48,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       backgroundColor: selectedSortBy == 'Tag/Label'
                           ? Theme.of(context).colorScheme.primary
                           : null,
+                      foregroundColor: selectedSortBy == 'Tag/Label'
+                          ? Theme.of(context).colorScheme.onPrimary // Contrasting text/icon color
+                          : null,
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4), // Smaller padding
                       minimumSize: Size(50, 30), // Minimum size of the button
                     ),
@@ -67,6 +70,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: selectedSortBy == 'Competences'
                           ? Theme.of(context).colorScheme.primary
+                          : null,
+                      foregroundColor: selectedSortBy == 'Competences'
+                          ? Theme.of(context).colorScheme.onPrimary // Contrasting text/icon color
                           : null,
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       minimumSize: Size(50, 30),
@@ -100,6 +106,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       backgroundColor: selectedDisplayBy == 'Week'
                           ? Theme.of(context).colorScheme.primary
                           : null,
+                      foregroundColor: selectedDisplayBy == 'Week'
+                          ? Theme.of(context).colorScheme.onPrimary // Contrasting text/icon color
+                          : null,
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       minimumSize: Size(50, 30),
                     ),
@@ -120,6 +129,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       backgroundColor: selectedDisplayBy == 'Month'
                           ? Theme.of(context).colorScheme.primary
                           : null,
+                      foregroundColor: selectedDisplayBy == 'Month'
+                          ? Theme.of(context).colorScheme.onPrimary // Contrasting text/icon color
+                          : null,
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       minimumSize: Size(50, 30),
                     ),
@@ -139,6 +151,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: selectedDisplayBy == 'Year'
                           ? Theme.of(context).colorScheme.primary
+                          : null,
+                      foregroundColor: selectedDisplayBy == 'Year'
+                          ? Theme.of(context).colorScheme.onPrimary // Contrasting text/icon color
                           : null,
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       minimumSize: Size(50, 30),
