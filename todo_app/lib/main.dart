@@ -5,6 +5,7 @@ import 'calendar_page.dart';
 import 'cemetry_page.dart';
 import 'statistics_page.dart';
 import 'tasks_page.dart';
+import 'create_task_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -185,22 +186,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 0;
+  var selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
     Widget page;
     switch(selectedIndex) {
       case 0:
-        page = TasksPage();
+        page = CreateTaskPage();
         break;
       case 1:
-        page = CalendarPage();
+        page = TasksPage();
         break;
       case 2:
-        page = StatisticsPage();
+        page = CalendarPage();
         break;
       case 3:
+        page = StatisticsPage();
+        break;
+      case 4:
         page = CemetryPage();
         break;
       default:
@@ -221,11 +225,21 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               ListTile(
+                leading: Icon(Icons.plus_one),
+                title: Text('Create Task'),
+                onTap: () {
+                  setState(() {
+                    selectedIndex = 0;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
                 leading: Icon(Icons.task),
                 title: Text('Tasks'),
                 onTap: () {
                   setState(() {
-                    selectedIndex = 0;
+                    selectedIndex = 1;
                   });
                   Navigator.pop(context);
                 },
@@ -235,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Calendar'),
                 onTap: () {
                   setState(() {
-                    selectedIndex = 1;
+                    selectedIndex = 2;
                   });
                   Navigator.pop(context);
                 },
@@ -245,7 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Statistics'),
                 onTap: () {
                   setState(() {
-                    selectedIndex = 2;
+                    selectedIndex = 3;
                   });
                   Navigator.pop(context);
                 },
@@ -255,7 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Cemetery'),
                 onTap: () {
                   setState(() {
-                    selectedIndex = 3;
+                    selectedIndex = 4;
                   });
                   Navigator.pop(context);
                 },
