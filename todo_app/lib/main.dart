@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'calendar_page.dart';
+import 'cemetry_page.dart';
+import 'statistics_page.dart';
+
+import 'package:todo_app/models/todo.dart';
 import 'tasks_page.dart';
 
 void main() {
@@ -191,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch(selectedIndex) {
       case 0:
-        page = TasksPage();
+        page = CemetryPage();
         break;
       case 1:
         page = CalendarPage();
