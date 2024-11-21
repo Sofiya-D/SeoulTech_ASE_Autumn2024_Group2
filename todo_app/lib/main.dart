@@ -2,7 +2,6 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'calendar_page.dart';
 import 'cemetry_page.dart';
 import 'statistics_page.dart';

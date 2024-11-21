@@ -1,9 +1,4 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/models/todo.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:todo_app/main.dart'; // Import the state management file containing `MyAppState`
 
 
 class StatisticsPage extends StatelessWidget {
