@@ -1,11 +1,10 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
 import 'calendar_page.dart';
 import 'cemetry_page.dart';
 import 'statistics_page.dart';
-
+import 'tasks_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'To-Do App',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
@@ -31,6 +30,11 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
+
+  // var taskList = <Todo>[];
+
+  // !! SHOULD BE REMOVED !!
+  // !! HERE FOR TESTING PURPOSES ONLY !!
   var taskList= <Todo>[
   Todo(
     title: 'Finish project report',
@@ -38,7 +42,7 @@ class MyAppState extends ChangeNotifier {
     importanceLevel: 3,
     tags: ['work', 'urgent'],
     startDate: DateTime(2024, 11, 1),
-    dueDate: DateTime(2024, 11, 5),
+    dueDate: DateTime(2024, 11, 10),
     isCompleted: false,
     points: 20,
     tasks: [
@@ -174,23 +178,7 @@ class MyAppState extends ChangeNotifier {
   ),
 ];
 
-  var current = WordPair.random();
 
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  var favorites = <WordPair>[];
-
-  void toggleFavorite() {
-    if (favorites.contains(current)){
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();    
-  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -206,13 +194,16 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch(selectedIndex) {
       case 0:
-        page = CemetryPage();
+        page = TasksPage();
         break;
       case 1:
         page = CalendarPage();
         break;
       case 2:
         page = StatisticsPage();
+        break;
+      case 3:
+        page = CemetryPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -261,6 +252,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.history),
+                title: Text('Cemetery'),
+                onTap: () {
+                  setState(() {
+                    selectedIndex = 3;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),
@@ -272,3 +273,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
