@@ -177,8 +177,6 @@ class MyAppState extends ChangeNotifier {
     ],
   ),
 ];
-
-
 }
 
 class MyHomePage extends StatefulWidget {
