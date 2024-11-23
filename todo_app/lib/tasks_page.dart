@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/main.dart'; // Import the state management file containing `MyAppState`
 import 'package:todo_app/models/todo.dart'; // Import the file where `Todo` is defined
 
-/// add filter (page "today" is a subset of "due-date")
-
+/// !TODO! add filter (case: page "today" is a subset of "due-date")
 
 class TasksPage extends StatelessWidget {
   @override
@@ -62,15 +61,34 @@ class _TaskListCardState extends State<TaskListCard> {
     var titleStyle = theme.textTheme.titleMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
-    var labelStyle = theme.textTheme.titleMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-    var date = task.dueDate != null 
-      ? DateFormat('MMM d').format(task.dueDate!) 
-      : "no date";
+    var sortingMethod = "date";
+    var label;
+    switch(sortingMethod) {
+      case "date":
+        label = task.dueDate != null 
+          ? DateFormat('MMM d').format(task.dueDate!) 
+          : "no date";
+        break;
+      case "priority":
+        label = task.importanceLevel != null 
+          ? task.importanceLevel.toString()
+          : "ND";
+        break;
+      case "tag":
+        label = task.tags.isEmpty 
+          ? task.tags[0].toString()
+          : "ND";
+        label.length >= 5 ? label.substring(0, 5) : label;
+        break;
+      case "cemetery":
+        label = null;
+        break;
+      default:
+        throw UnimplementedError('no sorting method chosen for task viewing');
+    }
 
     return Card(
-      color: theme.colorScheme.primary,
+      color: theme.colorScheme.secondary,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -79,29 +97,35 @@ class _TaskListCardState extends State<TaskListCard> {
               children: [
                 Container( // label on the left
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.secondary,
+                    color: theme.colorScheme.onSecondary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   child: Text(
-                    date,
-                    style: labelStyle,
+                    label,
+                    style: theme.textTheme.titleMedium!.copyWith(
+                      color: theme.colorScheme.secondary,
+                    ),
                   ),
                 ),
-                Container( // task title
-                  padding: EdgeInsets.symmetric(horizontal: 6),
-                  child: Text(
-                    task.title,
-                    style: titleStyle,
-                    semanticsLabel: task.title,
+                SizedBox(
+                  height: 25,
+                  width: 270,
+                  child: Container( // task title
+                    padding: EdgeInsets.symmetric(horizontal: 6),
+                    child: Text(
+                      task.title,
+                      style: titleStyle,
+                      semanticsLabel: task.title,
+                    ),
                   ),
                 ),
                 Spacer(),  // to push the expand/collapse button to the right
                 IconButton(
                   icon: Icon(
                     _isExpanded 
-                        ? Icons.arrow_drop_up 
-                        : Icons.arrow_drop_down,
+                        ? Icons.expand_less 
+                        : Icons.expand_more,
                     color: theme.colorScheme.onPrimary,
                   ),
                   onPressed: () {
@@ -115,30 +139,49 @@ class _TaskListCardState extends State<TaskListCard> {
             Row( // SECOND ROW
               children: [
                 Icon(Icons.tag),
+                for (var tag in task.tags)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.tertiary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      child: Text(
+                        tag.length >= 5 ? tag.substring(0, 5) : tag,
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: theme.colorScheme.onTertiary,
+                        ),
+                      ),
+                    ),
+                  ),
                 Spacer(),
                 !_isExpanded
                 ? Row(
                   children: [
                     // timeframe (dates)
-                    task.startDate==null
-                    ? Icon(Icons.not_accessible) // FIND A BETTER ICON
-                    : Icon(Icons.date_range),
                     // periodicity
                     task.periodicity==null
-                    ? Icon(Icons.not_accessible) // FIND A BETTER ICON
-                    : Icon(Icons.update),
+                    ? Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: task.startDate==null
+                        ? Padding(padding: const EdgeInsets.all(0))
+                        : Icon(Icons.event),
+                      )
+                    : Icon(Icons.event_repeat),
                     // description
                     task.description.isEmpty
-                    ? Icon(Icons.no_accounts)
+                    ? Padding(padding: const EdgeInsets.all(0))
                     : Icon(Icons.description),
                     // links
                     task.links.isEmpty
-                    ? Icon(Icons.link_off)
+                    ? Padding(padding: const EdgeInsets.all(0))
                     : Icon(Icons.link),
                     // folders
                     task.folders.isEmpty
-                    ? Icon(Icons.folder_off)
-                    : Icon(Icons.folder),
+                    ? Padding(padding: const EdgeInsets.all(0))
+                    : Icon(Icons.collections),
                   ],
                 )
                 : SizedBox.shrink(),
