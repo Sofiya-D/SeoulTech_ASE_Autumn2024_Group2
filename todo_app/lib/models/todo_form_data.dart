@@ -11,6 +11,7 @@ class TodoFormData {
   TextEditingController tags = TextEditingController();
   DateTime? startDate;
   DateTime? dueDate;
+  Duration? periodicity;
   int importanceLevel = 1;
   String? dateError;
   final List<SubtaskFormData> subtasks = [];
@@ -48,6 +49,7 @@ class SubtaskFormData {
   TextEditingController tags = TextEditingController();
   DateTime? startDate;
   DateTime? dueDate;
+  Duration? periodicity;
   int importanceLevel = 1;
   String? dateError;
   final List<String> links = [];

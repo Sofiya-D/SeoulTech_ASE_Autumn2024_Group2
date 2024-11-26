@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/models/periodicity_toggle.dart';
 import 'package:todo_app/models/quick_date_button.dart';
 // import 'package:todo_app/views/todo_form/todo_form_data.dart';
 import 'package:todo_app/models/todo_form_data.dart';
@@ -55,6 +56,12 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
     }
   }
 
+  void _updatePeriodicity(Duration? periodicity) {
+    setState(() {
+      widget.formData.periodicity = periodicity;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -106,6 +113,11 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 8),
+            PeriodicityToggle(
+              initialPeriodicity: widget.formData.periodicity,
+              onPeriodicityChanged: _updatePeriodicity,
             ),
             if (widget.formData.dateError != null)
               Padding(
