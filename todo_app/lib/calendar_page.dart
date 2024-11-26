@@ -21,93 +21,66 @@ class _CalendarPageState extends State<CalendarPage> {
     _groupTasksByDate();
   }
 
-  /*void _debugPrintGroupedTasks() {
-    _groupedTasks.forEach((date, tasks) {
-      debugPrint('Date: $date');
-      for (var task in tasks) {
-        debugPrint('  - Task: ${task.title}, Periodicity: ${task.periodicity}');
-      }
-    });
-  }*/
-
   void _groupTasksByDate() {
     final appState = Provider.of<MyAppState>(context, listen: false);
-    _groupedTasks.clear(); // Clear previous entries to avoid duplicates
+
+    // Clear grouped tasks before updating
+    _groupedTasks.clear();
 
     for (var task in appState.taskList) {
       if (task.startDate != null && task.dueDate != null) {
-        if (task.periodicity != null) {
-          // Handle periodic tasks
-          DateTime currentDate = task.startDate!;
-          while (currentDate.isBefore(task.dueDate!) || currentDate.isAtSameMomentAs(task.dueDate!)) {
-            final taskDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
-            if (_groupedTasks[taskDate] == null) {
-              _groupedTasks[taskDate] = [];
-            }
-            _groupedTasks[taskDate]!.add(task);
-            currentDate = currentDate.add(task.periodicity!);
-            print("Adding periodic task '${task.title}' on date: $taskDate");
+        if (task.startDate!.isAtSameMomentAs(task.dueDate!)) {
+          // Single-day task
+          final dayKey = DateTime(task.startDate!.year, task.startDate!.month, task.startDate!.day);
+          if (_groupedTasks[dayKey] == null) {
+            _groupedTasks[dayKey] = [];
           }
+          _groupedTasks[dayKey]!.add(task);
         } else {
-          // Handle single-day tasks
-          final taskDate = DateTime(task.dueDate!.year, task.dueDate!.month, task.dueDate!.day);
-          if (_groupedTasks[taskDate] == null) {
-            _groupedTasks[taskDate] = [];
-          }
-          _groupedTasks[taskDate]!.add(task);
-          print("Adding single-day task '${task.title}' on date: $taskDate");
-        }
-      }
-    }
-
-    print("Grouped tasks:");
-    _groupedTasks.forEach((key, value) {
-      print("$key: ${value.map((task) => task.title).join(', ')}");
-    });
-  }
-
-  /*void _groupTasksByDate() {
-    final appState = Provider.of<MyAppState>(context, listen: false);
-    
-    for (var task in appState.taskList) {
-      if (task.startDate != null && task.dueDate != null){
-        if (task.periodicity != null){ // Periodic tasks
+          // Multi-day task
           DateTime currentDate = task.startDate!;
-          while (currentDate.isBefore(task.dueDate!) || currentDate.isAtSameMomentAs(task.dueDate!)) {
-            final taskDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
-            if (_groupedTasks[taskDate] == null){
-              _groupedTasks[taskDate] = [];
+          while (!currentDate.isAfter(task.dueDate!)) {
+            final dayKey = DateTime(currentDate.year, currentDate.month, currentDate.day);
+            if (_groupedTasks[dayKey] == null) {
+              _groupedTasks[dayKey] = [];
             }
-            _groupedTasks[taskDate]!.add(task);
-            currentDate = currentDate.add(task.periodicity!);
-          } 
-        }
-        else{ // Single Day tasks
-          final taskDate = DateTime(task.dueDate!.year, task.dueDate!.month, task.dueDate!.day);
-          if (_groupedTasks[taskDate] == null){
-            _groupedTasks[taskDate] = [];
+            _groupedTasks[dayKey]!.add(task);
+
+            // Increment the date
+            currentDate = currentDate.add(Duration(days: 1));
           }
-          _groupedTasks[taskDate]!.add(task);
         }
       }
     }
-
-     // Debug print after grouping tasks
-    _debugPrintGroupedTasks();
-  }*/
+  }
 
   List<Todo> _getTasksForDay(DateTime day) {
     return _groupedTasks[DateTime(day.year, day.month, day.day)] ?? [];
   }
 
-  /*List<DateTime> _getWeekStartingFromCurrentDate(DateTime currentDay) {
-    return List.generate(7, (index) => currentDay.add(Duration(days: index)));
-  }*/
+  // Predefined list of colors for multi-day tasks
+  final List<Color> multiDayTaskColors = [
+    Colors.blue,
+    Colors.green,
+    Colors.purple,
+    Colors.orange,
+    Colors.pink,
+    Colors.teal,
+  ];
+
+  // Method to assign a unique color to multi-day tasks
+  Color getMultiDayTaskColor(int index) {
+    return multiDayTaskColors[index % multiDayTaskColors.length];
+  }
+
+  // Fixed color for single-day tasks
+  final Color singleDayTaskColor = Colors.red;
 
   @override
   Widget build(BuildContext context) {
     final tasksForSelectedDay = _selectedDay != null ? _getTasksForDay(_selectedDay!) : [];
-
+    final events = List<Todo>.from(_groupedTasks[_focusedDay] ?? []);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Calendar'),
@@ -124,7 +97,10 @@ class _CalendarPageState extends State<CalendarPage> {
               CalendarFormat.week: 'Week', // Remove the 2-week format
             },
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            eventLoader: _getTasksForDay,
+            eventLoader: (day) {
+              final dayKey = DateTime(day.year, day.month, day.day);
+              return _groupedTasks[dayKey] ?? [];
+            },
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _selectedDay = selectedDay;
@@ -145,45 +121,55 @@ class _CalendarPageState extends State<CalendarPage> {
             },
 
             calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                if (events.isEmpty) return null;
+              markerBuilder: (context, day, events) {
+                // Get tasks for the focused day
+                final events = _groupedTasks[_focusedDay] ?? [];
 
-                List<Todo> singleDayTasks = [];
-                List<Todo> periodicTasks = [];
-
-                for (var event in events) {
-                  if (event is Todo){ // Explicitly cast the event to Todo
-                    if (event.periodicity != null) {
-                      periodicTasks.add(event);
-                    } else {
-                      singleDayTasks.add(event);
-                    }
-                  }
+                if (events.isEmpty) {
+                  return null;
                 }
+
+                // Separate single-day and multi-day tasks
+                final singleDayTasks = events.where((task) {
+                  final startDate = task.startDate;
+                  final dueDate = task.dueDate;
+                  return startDate != null && dueDate != null && startDate.isAtSameMomentAs(dueDate);
+                }).toList();
+
+                final multiDayTasks = events.where((task) {
+                  final startDate = task.startDate;
+                  final dueDate = task.dueDate;
+                  return startDate != null && dueDate != null && !startDate.isAtSameMomentAs(dueDate);
+                }).toList();
 
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Single-day tasks (circle indicator)
+                    // Marker for single-day tasks
                     if (singleDayTasks.isNotEmpty)
                       Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: singleDayTaskColor, // Color for single-day tasks
+                        ),
+                      ),
+                    // Marker for multi-day tasks
+                    ...multiDayTasks.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final task = entry.value;
+                      return Container(
+                        margin: const EdgeInsets.only(right: 2.0),
                         width: 8.0,
                         height: 8.0,
                         decoration: BoxDecoration(
-                          color: Colors.red, // Single-task color
+                          color: getMultiDayTaskColor(index),
                           shape: BoxShape.circle,
                         ),
-                      ),
-                    // Periodic tasks (line indicator)
-                    if (periodicTasks.isNotEmpty)
-                      Container(
-                        width: 20.0,
-                        height: 4.0,
-                        decoration: BoxDecoration(
-                          color: Colors.blue, // Periodic-task color
-                          borderRadius: BorderRadius.circular(2.0),
-                        ),
-                      ),
+                      );
+                    }),
                   ],
                 );
               },
