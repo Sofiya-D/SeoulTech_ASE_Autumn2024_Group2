@@ -174,6 +174,11 @@ class _SubtaskCardState extends State<SubtaskCard> {
                   ),
                   const SizedBox(height: 16),
                   TodoDatesSection(formData: _createSubtaskFormData()),
+                  const SizedBox(height: 8),
+                  // QuickDateButtons(
+                  //   formData: _createSubtaskFormData(), 
+                  //   isSubtask: true,
+                  // ),
                   const SizedBox(height: 16),
                   ImportanceLevelSlider(formData: _createSubtaskFormData()),
                   const SizedBox(height: 16),

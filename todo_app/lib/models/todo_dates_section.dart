@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/models/quick_date_button.dart';
 // import 'package:todo_app/views/todo_form/todo_form_data.dart';
 import 'package:todo_app/models/todo_form_data.dart';
 
@@ -68,6 +69,16 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            const SizedBox(height: 8),
+            QuickDateButtons(
+              formData: widget.formData,
+              onDateChanged: () {
+                setState(() {
+                  // Trigger a rebuild to update date displays
+                  widget.formData.validateDates();
+                });
+              },
             ),
             const SizedBox(height: 8),
             Row(

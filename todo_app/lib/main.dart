@@ -193,13 +193,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 1;
+  
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var taskList = appState.taskList;
     Widget page;
     switch(selectedIndex) {
       case 0:
-        page = CreateTaskPage();
+        // page = CreateTaskPage();
+        page = TodoFormView(
+        onSubmit: (Todo todo) {
+          // debug
+          print('Nouvelle tâche créée : ${todo.title}');
+          taskList.add(todo);
+          },
+        );
         break;
       case 1:
         page = TasksPage();
