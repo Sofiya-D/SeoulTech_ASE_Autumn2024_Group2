@@ -31,12 +31,22 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-
-  // var taskList = <Todo>[];
+    // var taskList = <Todo>[];
 
   // !! SHOULD BE REMOVED !!
   // !! HERE FOR TESTING PURPOSES ONLY !!
   var taskList= <Todo>[
+  Todo(
+    title: 'Project',
+    description: 'Total duration of the prject',
+    importanceLevel: 1,
+    tags: ['work'],
+    startDate: DateTime(2024, 11, 1),
+    dueDate: DateTime(2024, 12, 15),
+    periodicity: Duration(days: 30),
+    isCompleted: false,
+    points: 20,
+  ),
   Todo(
     title: 'Finish project report',
     description: 'Complete the final report for the project by the deadline.',
