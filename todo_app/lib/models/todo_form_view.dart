@@ -10,6 +10,7 @@ import 'package:todo_app/models/todo_main_info_section.dart';
 import 'package:todo_app/models/todo_subtasks_section.dart';
 import 'package:todo_app/models/todo_form_data.dart';
 import 'todo_links_section.dart';
+import 'package:todo_app/models/todo_folders_section.dart';
 
 class TodoFormView extends StatefulWidget {
   final Function(Todo) onSubmit;
@@ -38,6 +39,7 @@ class _TodoFormViewState extends State<TodoFormView> {
         startDate: _formData.startDate,
         dueDate: _formData.dueDate,
         links: _formData.links,
+        folders: _formData.folders,
         tasks: _formData.subtasks.map((subtaskData) {
           return TodoTask(
             title: subtaskData.title.text,
@@ -48,6 +50,7 @@ class _TodoFormViewState extends State<TodoFormView> {
                 .where((e) => e.isNotEmpty)
                 .toList(),
             links: subtaskData.links,
+            folders: subtaskData.folders,
           );
         }).toList(),
         
@@ -74,6 +77,8 @@ class _TodoFormViewState extends State<TodoFormView> {
               TodoDatesSection(formData: _formData),
               const SizedBox(height: 16),
               TodoLinksSection(formData: _formData),
+              const SizedBox(height: 16),
+              TodoFoldersSection(formData: _formData),
               const SizedBox(height: 16),
               TodoSubtasksSection(formData: _formData),
               const SizedBox(height: 32),

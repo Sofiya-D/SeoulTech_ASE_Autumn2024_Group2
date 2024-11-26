@@ -1,6 +1,7 @@
 // lib/views/todo_form/widgets/todo_subtasks_section.dart
 
 import 'package:flutter/material.dart';
+import 'package:todo_app/models/folder_manager.dart';
 // import 'package:todo_app/views/todo_form/todo_form_data.dart';
 // import 'package:todo_app/views/todo_form/widgets/todo_dates_section.dart';
 // import 'package:todo_app/views/todo_form/widgets/todo_main_info_section.dart';
@@ -182,6 +183,16 @@ class _SubtaskCardState extends State<SubtaskCard> {
                       setState(() {
                         widget.subtask.links.clear();
                         widget.subtask.links.addAll(updatedLinks);
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  FolderManager(
+                    folders: widget.subtask.folders,
+                    onFoldersUpdated: (updatedFolders) {
+                      setState(() {
+                        widget.subtask.folders.clear();
+                        widget.subtask.folders.addAll(updatedFolders);
                       });
                     },
                   ),
