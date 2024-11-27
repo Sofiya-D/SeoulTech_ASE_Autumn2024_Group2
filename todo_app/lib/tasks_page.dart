@@ -349,7 +349,7 @@ class TaskCardThirdSection extends StatelessWidget {
                       Expanded(
                         child: Text(
                           task.description,
-                          maxLines: 10,
+                          maxLines: 6,
                           overflow: TextOverflow.ellipsis,
                           style: contentStyle,
                         ),
@@ -371,7 +371,7 @@ class TaskCardThirdSection extends StatelessWidget {
                         Expanded(
                             child: ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxHeight: 260.0, // Max height of 200
+                            maxHeight: 160.0, // Max height of 200
                           ),
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
