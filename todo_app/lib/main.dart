@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/models/todo_form_view.dart';
 import 'calendar_page.dart';
 import 'cemetry_page.dart';
 import 'statistics_page.dart';
@@ -8,9 +9,14 @@ import 'tasks_page.dart';
 import 'create_task_page.dart';
 import 'settings_page.dart';
 
-void main(){
+
+// void main() {
+//   runApp(const MyApp());
+// }
+void main() {
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
