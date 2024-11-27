@@ -6,8 +6,9 @@ import 'cemetry_page.dart';
 import 'statistics_page.dart';
 import 'tasks_page.dart';
 import 'create_task_page.dart';
+import 'settings_page.dart';
 
-void main() {
+void main(){
   runApp(MyApp());
 }
 
@@ -217,6 +218,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 4:
         page = CemetryPage();
         break;
+      case 5:
+        page = SettingsPage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -277,6 +281,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ListTile(
                 leading: Icon(Icons.history),
                 title: Text('Cemetery'),
+                onTap: () {
+                  setState(() {
+                    selectedIndex = 4;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Settings'),
                 onTap: () {
                   setState(() {
                     selectedIndex = 4;
