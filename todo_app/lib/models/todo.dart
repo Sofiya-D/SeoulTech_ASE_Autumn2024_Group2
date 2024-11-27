@@ -1,4 +1,4 @@
-
+import 'package:flutter/material.dart';
 
 class Todo {
 
@@ -16,6 +16,7 @@ class Todo {
   List<String> folders;
   List<String> links;
   int points;
+  Color? taskColor;
 
   Todo({
     required this.title,
@@ -32,6 +33,7 @@ class Todo {
     this.folders = const [],
     this.links = const [],
     this.points = 0,
+    this.taskColor,
   });
 
 
