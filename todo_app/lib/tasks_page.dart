@@ -64,7 +64,7 @@ class _TaskListCardState extends State<_TaskListCard> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            // FIRST ROW
+            // FIRST SECTION
             TaskCardFirstSection(
               task: task,
               isExpanded: _isExpanded,
@@ -75,12 +75,12 @@ class _TaskListCardState extends State<_TaskListCard> {
                 });
               },
             ),
-            // SECOND ROW
+            // SECOND SECTION
             TaskCardSecondSection(
               task: task,
               isExpanded: _isExpanded,
             ),
-            // THIRD ROW
+            // THIRD SECTION
             TaskCardThirdSection(
               task: task,
               isExpanded: _isExpanded,
@@ -92,7 +92,7 @@ class _TaskListCardState extends State<_TaskListCard> {
   }
 }
 
-/// First row of the TaskListCard
+/// First section of the TaskListCard
 class TaskCardFirstSection extends StatelessWidget {
   const TaskCardFirstSection({
     super.key,
@@ -118,7 +118,7 @@ class TaskCardFirstSection extends StatelessWidget {
       case "date":
         label = task.dueDate != null
             ? DateFormat('MMM d').format(task.dueDate!)
-            : "no date";
+            : "ND";
         break;
       case "priority":
         label = task.importanceLevel.toString();
@@ -151,12 +151,14 @@ class TaskCardFirstSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 25,
-          width: 250, // task title width limitation
+          // height: !isExpanded ? 25 : null,
+          width: 270, // task title width limitation
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: Text(
               task.title,
+              maxLines: !isExpanded ? 1 : 2, // Limit lines when collapsed
+              overflow: TextOverflow.ellipsis, // Add ellipsis if cropped
               style: titleStyle,
               semanticsLabel: task.title,
             ),
@@ -175,7 +177,8 @@ class TaskCardFirstSection extends StatelessWidget {
   }
 }
 
-/// Second row of the TaskListCard
+/// Second section of the TaskListCard:
+/// tags and content icons
 class TaskCardSecondSection extends StatelessWidget {
   const TaskCardSecondSection({
     super.key,
@@ -193,58 +196,57 @@ class TaskCardSecondSection extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          // tags
           Icons.tag,
           color: theme.colorScheme.onSecondary,
         ),
-        for (var tag in task.tags)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.tertiary,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              child: Text(
-                tag.length >= 5 ? tag.substring(0, 5) : tag,
-                style: isExpanded
-                    ? theme.textTheme.bodyMedium!
-                        .copyWith(color: theme.colorScheme.onTertiary)
-                    : theme.textTheme.bodyLarge!
-                        .copyWith(color: theme.colorScheme.onTertiary),
+        Expanded(
+          child: SizedBox(
+            // tags
+            height: 28,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal, // Allow horizontal scrolling
+              child: Row(
+                children: [
+                  for (var tag in task.tags)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.tertiary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        child: Text(
+                          tag.length >= 6
+                              ? tag.substring(0, 6)
+                              : tag, // show only the first 6 letters of the tag
+                          style: isExpanded
+                              ? theme.textTheme.bodyMedium!
+                                  .copyWith(color: theme.colorScheme.onTertiary)
+                              : theme.textTheme.bodyLarge!.copyWith(
+                                  color: theme.colorScheme.onTertiary),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
-        Spacer(),
+        ),
+        SizedBox(
+          width: 20,
+        ),
         !isExpanded
             ? Row(
-                // content icons
                 children: [
-                  // timeframe (dates) / periodicity
-                  task.startDate == null
-                      ? Padding(padding: const EdgeInsets.all(0))
-                      : Icon(Icons.event),
-                  // periodicity
-                  getTaskPeriodicityString(task.periodicity) == null
-                      ? Padding(padding: const EdgeInsets.all(0))
-                      : Icon(Icons.event_repeat),
-                  // description
-                  task.description.isEmpty
-                      ? Padding(padding: const EdgeInsets.all(0))
-                      : Icon(Icons.description),
-                  // subtasks
-                  task.tasks.isEmpty
-                      ? Padding(padding: const EdgeInsets.all(0))
-                      : Icon(Icons.playlist_play),
-                  // links
-                  task.links.isEmpty
-                      ? Padding(padding: const EdgeInsets.all(0))
-                      : Icon(Icons.link),
-                  // folders
-                  task.folders.isEmpty
-                      ? Padding(padding: const EdgeInsets.all(0))
-                      : Icon(Icons.collections),
+                  if (task.startDate != null) Icon(Icons.event),
+                  if (getTaskPeriodicityString(task.periodicity) != null)
+                    Icon(Icons.event_repeat),
+                  if (task.description.isNotEmpty) Icon(Icons.description),
+                  if (task.tasks.isNotEmpty) Icon(Icons.playlist_play),
+                  if (task.links.isNotEmpty) Icon(Icons.link),
+                  if (task.folders.isNotEmpty) Icon(Icons.collections),
                 ],
               )
             : SizedBox.shrink(),
@@ -267,9 +269,8 @@ class TaskCardThirdSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var contentStyle = theme.textTheme.bodyMedium!.copyWith(
-      color: theme.colorScheme.onSurface
-    );
+    var contentStyle = theme.textTheme.bodyMedium!
+        .copyWith(color: theme.colorScheme.onSurface);
     var taskDateStr = getTaskDateString(task.startDate, task.dueDate);
     var taskPeriodicityStr = getTaskPeriodicityString(task.periodicity);
 
@@ -279,10 +280,11 @@ class TaskCardThirdSection extends StatelessWidget {
       child: isExpanded
           ? // Expanded card content (exclusively)
           Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 5),
                   Row(
                     // FIRST ROW
                     // priority/importance level
@@ -333,6 +335,7 @@ class TaskCardThirdSection extends StatelessWidget {
                           : Padding(padding: const EdgeInsets.all(0))
                     ],
                   ),
+                  SizedBox(height: 5),
                   Row(
                     // SECOND ROW
                     // description
@@ -346,107 +349,121 @@ class TaskCardThirdSection extends StatelessWidget {
                       Expanded(
                         child: Text(
                           task.description,
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
                           style: contentStyle,
                         ),
                       ),
                     ],
                   ),
-                  task.tasks.isEmpty
-                  ? Padding(padding: const EdgeInsets.all(0))
-                  : Row(
-                    // THIRD ROW
-                    // sub-tasks
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align icon to top
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 2.0, top: 4.0),
-                        child: Icon(Icons.playlist_play),
-                      ),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (var subtask in task.tasks)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2.0, vertical: 4.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: contentStyle.color,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
+                  if (task.tasks.isNotEmpty) SizedBox(height: 5),
+                  if (task.tasks.isNotEmpty)
+                    Row(
+                      // THIRD ROW
+                      // sub-tasks
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // Align icon to top
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 2.0, top: 4.0),
+                          child: Icon(Icons.playlist_play),
+                        ),
+                        Expanded(
+                            child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: 260.0, // Max height of 200
+                          ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (var subtask in task.tasks)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0, vertical: 4.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: contentStyle.color,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 2),
+                                      child: Text(
+                                        subtask.title,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: theme.textTheme.bodyMedium!
+                                            .copyWith(
+                                                color: theme
+                                                    .colorScheme.onTertiary),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        )),
+                      ],
+                    ),
+                  if (task.links.isNotEmpty) SizedBox(height: 5),
+                  if (task.links.isNotEmpty)
+                    Row(
+                      // FOURTH ROW
+                      // links
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // Align icon to top
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 2.0),
+                          child: Icon(Icons.link),
+                        ),
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (var link in task.links)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2.0),
                                 child: Text(
-                                  subtask.title,
-                                  style: theme.textTheme.bodyMedium!.copyWith(
-                                      color: theme.colorScheme.onTertiary),
+                                  link,
+                                  style: contentStyle,
                                 ),
                               ),
-                            ),
-                        ],
-                      )),
-                    ],
-                  ),
-                  task.links.isEmpty
-                  ? Padding(padding: const EdgeInsets.all(0))
-                  : Row(
-                    // FOURTH ROW
-                    // links
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align icon to top
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 2.0, top: 4.0),
-                        child: Icon(Icons.link),
-                      ),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (var link in task.links)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2.0, vertical: 4.0),
-                              child: Text(
-                                link,
-                                style: contentStyle,
+                          ],
+                        )),
+                      ],
+                    ),
+                  if (task.folders.isNotEmpty) SizedBox(height: 5),
+                  if (task.folders.isNotEmpty)
+                    Row(
+                      // FIFTH ROW
+                      // folders
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // Align icon to top
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 2.0, top: 4.0),
+                          child: Icon(Icons.collections),
+                        ),
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (var folder in task.folders)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 2.0, vertical: 4.0),
+                                child: Text(
+                                  folder,
+                                  style: contentStyle,
+                                ),
                               ),
-                            ),
-                        ],
-                      )),
-                    ],
-                  ),
-                  task.links.isEmpty
-                  ? Padding(padding: const EdgeInsets.all(0))
-                  : Row(
-                    // FIFTH ROW
-                    // folders
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align icon to top
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 2.0, top: 4.0),
-                        child: Icon(Icons.collections),
-                      ),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (var folder in task.folders)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2.0, vertical: 4.0),
-                              child: Text(
-                                folder,
-                                style: contentStyle,
-                              ),
-                            ),
-                        ],
-                      )),
-                    ],
-                  ),
+                          ],
+                        )),
+                      ],
+                    ),
                   // Add expanded card content here
                 ],
               ),

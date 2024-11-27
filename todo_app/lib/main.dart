@@ -312,6 +312,265 @@ class MyAppState extends ChangeNotifier {
       links: ['https://company.com/product-launch-strategy'],
       points: 50,
     ),
+    Todo(
+      title: "Plan birthday party for best friend",
+      dueDate: DateTime.now().add(Duration(days: 10)),
+      description:
+          "Organize a surprise party with decorations, food, and entertainment.",
+      folders: ["Personal", "Events"],
+      tasks: [
+        TodoTask(
+          title:
+              "Decide on a party theme and color scheme to match the vibe of the event",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Research and book a venue that fits within the budget and accommodates everyone",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Create a detailed guest list including names, contact information, and RSVPs",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Order or prepare food and drinks, including options for dietary restrictions",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Arrange for decorations, lights, and other party supplies to enhance the atmosphere",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Set up entertainment options, like music playlists, games, or hiring a DJ",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Write and send out invitations to all guests with clear details about the event",
+          isCompleted: false,
+        ),
+      ],
+      tags: ["Important", "Social"],
+      importanceLevel: 4,
+      periodicity: null,
+    ),
+    Todo(
+      title:
+          "Plan and execute an end-of-year team-building event to foster collaboration, creativity, and a sense of achievement",
+      dueDate: DateTime.now().add(Duration(days: 14)),
+      description:
+          "Organize an impactful and engaging team-building event to mark the end of the year. This event should help strengthen team relationships, inspire creativity, and celebrate achievements made throughout the year. The planning process should consider diverse team interests and include a mix of fun and meaningful activities that encourage collaboration and personal connections.",
+      folders: ["Work", "Team Building"],
+      tasks: [
+        TodoTask(
+          title:
+              "Research and shortlist venues that are large enough and cater to the planned activities",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Draft a comprehensive agenda that includes both structured and casual activities",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Coordinate with vendors to arrange for food, drinks, and necessary supplies",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Send a detailed invitation email to all team members including a breakdown of the agenda and event logistics",
+          isCompleted: false,
+        ),
+      ],
+      tags: ["Team", "Event Planning", "High Priority"],
+      importanceLevel: 5,
+      periodicity: null,
+    ),
+    Todo(
+      title:
+          "Develop a comprehensive marketing strategy for the launch of the new product line",
+      dueDate: DateTime.now().add(Duration(days: 30)),
+      description:
+          "The goal of this task is to create a detailed marketing strategy that will successfully introduce the new product line to the target audience, generate excitement, and drive sales. This strategy should include a thorough analysis of the current market trends and competitor activities. It must outline clear objectives, key performance indicators, and the intended timeline for each phase of the campaign. Moreover, the strategy should incorporate both digital and traditional marketing channels to ensure a broad reach. The digital strategy should leverage social media platforms, search engine optimization, email campaigns, and influencer partnerships. On the other hand, traditional marketing efforts should include print advertising, in-store promotions, and potential partnerships with local businesses. Collaboration with the sales and design teams is crucial to ensure that the marketing materials align with the brand identity and effectively highlight the product's unique selling points. Special attention should be given to creating high-quality, engaging content that resonates with the audience and clearly communicates the value of the new product line. This task will also involve planning a pre-launch teaser campaign to build anticipation, organizing a memorable launch event, and setting up mechanisms to gather feedback from customers post-launch. Finally, regular monitoring of the campaign's performance and the ability to adapt the strategy as needed based on real-time data are essential to ensure success.",
+      folders: ["Work", "Marketing"],
+      tasks: [
+        TodoTask(
+          title:
+              "Conduct a detailed market analysis to identify opportunities and challenges",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Collaborate with the sales team to define the key features and benefits of the new product line",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Plan and execute a pre-launch teaser campaign across selected platforms",
+          isCompleted: false,
+        ),
+        TodoTask(
+          title:
+              "Organize a high-impact product launch event to maximize visibility",
+          isCompleted: false,
+        ),
+      ],
+      tags: ["Marketing", "Product Launch", "Strategy"],
+      importanceLevel: 4,
+      periodicity: null,
+    ),
+    Todo(
+      title: "Prepare for the upcoming team meeting",
+      description:
+          "This task involves preparing all the necessary materials and discussions for the team meeting, including reviewing progress reports, creating a presentation, and preparing some discussion points.",
+      importanceLevel: 3,
+      tags: ["work", "meeting", "important"],
+      startDate: DateTime(2024, 11, 25, 9, 0),
+      dueDate: DateTime(2024, 11, 26, 18, 0),
+      periodicity: Duration(days: 1),
+      isDeleted: false,
+      isCompleted: false,
+      isMissed: false,
+      tasks: [
+        TodoTask(
+          title: "Review the team's progress reports",
+          description:
+              "Go over the progress reports from all team members and check for any pending items or blockers. Prepare feedback to provide during the meeting.",
+          tags: ["review", "team", "progress"],
+          startDate: DateTime(2024, 11, 25, 9, 0),
+          dueDate: DateTime(2024, 11, 25, 12, 0),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["Reports", "Team Updates"],
+          links: ["https://docs.team.com/progress_reports"],
+          points: 5,
+        ),
+        TodoTask(
+          title: "Create a presentation for the meeting",
+          description:
+              "Prepare a PowerPoint presentation covering the main points of the meeting, including project milestones, upcoming tasks, and any issues that need to be discussed.",
+          tags: ["presentation", "meeting"],
+          startDate: DateTime(2024, 11, 25, 12, 0),
+          dueDate: DateTime(2024, 11, 25, 16, 0),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["Presentations", "Team Meetings"],
+          links: ["https://docs.team.com/meeting_presentation_template"],
+          points: 7,
+        ),
+        TodoTask(
+          title: "Prepare discussion points for the meeting",
+          description:
+              "Make a list of the main points to be discussed during the team meeting. This includes deadlines, issues encountered, and team feedback.",
+          tags: ["discussion", "meeting", "agenda"],
+          startDate: DateTime(2024, 11, 25, 16, 0),
+          dueDate: DateTime(2024, 11, 25, 18, 0),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["Team Meetings", "Agenda"],
+          links: ["https://docs.team.com/discussion_points"],
+          points: 4,
+        ),
+        TodoTask(
+          title: "Send out meeting reminders to the team",
+          description:
+              "Send a reminder to all team members about the upcoming meeting, including the agenda, location, and time.",
+          tags: ["reminder", "meeting", "email"],
+          startDate: DateTime(2024, 11, 25, 18, 0),
+          dueDate: DateTime(2024, 11, 25, 18, 30),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["Email", "Reminders"],
+          links: ["https://email.team.com/meeting_reminder_template"],
+          points: 3,
+        ),
+        TodoTask(
+          title: "Coordinate with the IT team for the meeting room setup",
+          description:
+              "Ensure that the meeting room is properly set up with all necessary equipment, including projectors, screens, and working microphones. Verify that the IT team has everything ready.",
+          tags: ["coordination", "IT", "meeting room"],
+          startDate: DateTime(2024, 11, 25, 10, 0),
+          dueDate: DateTime(2024, 11, 25, 11, 0),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["IT", "Meeting Setup"],
+          links: ["https://docs.team.com/it_meeting_setup"],
+          points: 6,
+        ),
+        TodoTask(
+          title: "Confirm attendee list and send invitations",
+          description:
+              "Check the list of attendees and confirm their availability for the meeting. Send formal calendar invites with all details.",
+          tags: ["attendees", "invites", "calendar"],
+          startDate: DateTime(2024, 11, 25, 11, 0),
+          dueDate: DateTime(2024, 11, 25, 12, 0),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["Invitations", "Attendees"],
+          links: ["https://calendar.team.com/meeting_invites"],
+          points: 4,
+        ),
+        TodoTask(
+          title: "Finalize and distribute meeting agenda",
+          description:
+              "Finalize the agenda for the meeting, ensuring that all important topics are covered. Distribute the agenda to all attendees in advance.",
+          tags: ["agenda", "finalize", "distribution"],
+          startDate: DateTime(2024, 11, 25, 14, 0),
+          dueDate: DateTime(2024, 11, 25, 15, 0),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["Agenda", "Meeting Materials"],
+          links: ["https://docs.team.com/meeting_agenda_final"],
+          points: 5,
+        ),
+        TodoTask(
+          title: "Prepare backup plan in case of technical difficulties",
+          description:
+              "In case of any technical difficulties during the meeting, prepare a backup plan. This includes ensuring that the team has alternative tools ready in case the presentation software fails.",
+          tags: ["backup", "plan", "technical"],
+          startDate: DateTime(2024, 11, 25, 13, 0),
+          dueDate: DateTime(2024, 11, 25, 14, 0),
+          periodicity: null,
+          isDeleted: false,
+          isCompleted: false,
+          isMissed: false,
+          tasks: [],
+          folders: ["Contingency", "Technical"],
+          links: ["https://docs.team.com/technical_backup_plan"],
+          points: 6,
+        ),
+      ],
+      folders: ["Team Meeting Preparation", "Work Tasks"],
+      links: ["https://docs.team.com/team_meeting_guide"],
+      points: 40,
+    ),
   ];
 }
 
