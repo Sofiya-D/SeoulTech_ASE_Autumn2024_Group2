@@ -12,6 +12,8 @@ class TodoFormData {
   TextEditingController tags = TextEditingController();
   DateTime? startDate;
   DateTime? dueDate;
+  TimeOfDay? startTime;
+  TimeOfDay? dueTime;
   Periodicity? periodicity;
   int importanceLevel = 1;
   String? dateError;
@@ -19,16 +21,47 @@ class TodoFormData {
   final List<String> links = [];
   final List<String> folders = [];
 
+  DateTime? get startDateTime {
+    if (startDate == null) return null;
+    return startTime == null 
+      ? startDate 
+      : DateTime(
+          startDate!.year, 
+          startDate!.month, 
+          startDate!.day, 
+          startTime!.hour, 
+          startTime!.minute
+        );
+  }
+
+  DateTime? get dueDateTime {
+    if (dueDate == null) return null;
+    return dueTime == null 
+      ? dueDate 
+      : DateTime(
+          dueDate!.year, 
+          dueDate!.month, 
+          dueDate!.day, 
+          dueTime!.hour, 
+          dueTime!.minute
+        );
+  }
+
   bool validateDates() {
     dateError = null;
 
-    if (startDate != null && dueDate != null) {
-      if (dueDate!.isBefore(startDate!)) {
-        dateError = 'La date de fin doit être après la date de début';
+    if (startDateTime != null && dueDateTime != null) {
+      if (dueDateTime!.isBefore(startDateTime!)) {
+        dateError = 'La date et l\'heure de fin doivent être après la date et l\'heure de début';
         return false;
       }
     }
     return true;
+  }
+
+  void clearDueDateTime() {
+    dueDate = null;
+    dueTime = null;
   }
 
   void dispose() {
@@ -50,23 +83,57 @@ class SubtaskFormData {
   TextEditingController tags = TextEditingController();
   DateTime? startDate;
   DateTime? dueDate;
+  TimeOfDay? startTime;
+  TimeOfDay? dueTime;
   Periodicity? periodicity;
   int importanceLevel = 1;
   String? dateError;
   final List<String> links = [];
   final List<String> folders = [];
 
+  DateTime? get startDateTime {
+    if (startDate == null) return null;
+    return startTime == null 
+      ? startDate 
+      : DateTime(
+          startDate!.year, 
+          startDate!.month, 
+          startDate!.day, 
+          startTime!.hour, 
+          startTime!.minute
+        );
+  }
+
+  DateTime? get dueDateTime {
+    if (dueDate == null) return null;
+    return dueTime == null 
+      ? dueDate 
+      : DateTime(
+          dueDate!.year, 
+          dueDate!.month, 
+          dueDate!.day, 
+          dueTime!.hour, 
+          dueTime!.minute
+        );
+  }
+
   bool validateDates() {
     dateError = null;
 
-    if (startDate != null && dueDate != null) {
-      if (dueDate!.isBefore(startDate!)) {
-        dateError = 'La date de fin doit être après la date de début';
+    if (startDateTime != null && dueDateTime != null) {
+      if (dueDateTime!.isBefore(startDateTime!)) {
+        dateError = 'La date et l\'heure de fin doivent être après la date et l\'heure de début';
         return false;
       }
     }
     return true;
   }
+
+  void clearDueDateTime() {
+    dueDate = null;
+    dueTime = null;
+  }
+
 
   void dispose() {
     title.dispose();

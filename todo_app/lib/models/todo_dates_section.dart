@@ -21,6 +21,66 @@ class TodoDatesSection extends StatefulWidget {
 }
 
 class _TodoDatesSectionState extends State<TodoDatesSection> {
+
+  Future<void> _selectStartDateTime() async {
+    // Pick start date
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: widget.formData.startDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      // Pick start time
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: widget.formData.startTime ?? TimeOfDay.now(),
+      );
+
+      setState(() {
+        widget.formData.startDate = pickedDate;
+        widget.formData.startTime = pickedTime;
+
+        // Reset due date/time if it's before the new start date/time
+        if (widget.formData.dueDateTime != null && 
+            widget.formData.dueDateTime!.isBefore(widget.formData.startDateTime!)) {
+          widget.formData.clearDueDateTime();
+        }
+      });
+
+      widget.formData.validateDates();
+    }
+  }
+
+    Future<void> _selectDueDateTime() async {
+      // Determine the minimum date for due date
+      DateTime minDate = widget.formData.startDate ?? DateTime.now();
+
+      // Pick due date
+      final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: widget.formData.dueDate ?? minDate,
+        firstDate: minDate,
+        lastDate: DateTime(2101),
+      );
+
+      if (pickedDate != null) {
+        // Pick due time
+        final TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialTime: widget.formData.dueTime ?? TimeOfDay.now(),
+        );
+
+      setState(() {
+        widget.formData.dueDate = pickedDate;
+        widget.formData.dueTime = pickedTime;
+      });
+
+      widget.formData.validateDates();
+    }
+  }
+
   Future<void> _selectStartDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -103,23 +163,24 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
             Row(
               children: [
                 Expanded(
-                  child: _DateTile(
+                  child: _DateTimeTile(
                     title: 'Date de début',
-                    date: widget.formData.startDate,
-                    onTap: _selectStartDate,
+                    dateTime: widget.formData.startDateTime,
+                    onTap: _selectStartDateTime,
                     onClear: () => setState(() {
                       widget.formData.startDate = null;
+                      widget.formData.startTime = null;
                       widget.formData.dateError = null;
                     }),
                   ),
                 ),
                 Expanded(
-                  child: _DateTile(
+                  child: _DateTimeTile(
                     title: 'Date de fin',
-                    date: widget.formData.dueDate,
-                    onTap: _selectDueDate,
+                    dateTime: widget.formData.dueDateTime,
+                    onTap: _selectDueDateTime,
                     onClear: () => setState(() {
-                      widget.formData.dueDate = null;
+                      widget.formData.clearDueDateTime();
                       widget.formData.dateError = null;
                     }),
                   ),
@@ -173,6 +234,40 @@ class _DateTile extends StatelessWidget {
       ),
       onTap: onTap,
       trailing: date != null
+          ? IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: onClear,
+            )
+          : null,
+    );
+  }
+}
+
+class _DateTimeTile extends StatelessWidget {
+  final String title;
+  final DateTime? dateTime;
+  final VoidCallback onTap;
+  final VoidCallback onClear;
+
+  const _DateTimeTile({
+    Key? key,
+    required this.title,
+    required this.dateTime,
+    required this.onTap,
+    required this.onClear,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(
+        dateTime == null 
+          ? 'Non définie' 
+          : DateFormat('dd/MM/yyyy HH:mm').format(dateTime!),
+      ),
+      onTap: onTap,
+      trailing: dateTime != null
           ? IconButton(
               icon: const Icon(Icons.clear),
               onPressed: onClear,

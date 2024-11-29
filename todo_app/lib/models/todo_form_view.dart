@@ -36,8 +36,8 @@ class _TodoFormViewState extends State<TodoFormView> {
             .map((e) => e.trim())
             .where((e) => e.isNotEmpty)
             .toList(),
-        startDate: _formData.startDate,
-        dueDate: _formData.dueDate,
+        startDate: _formData.startDateTime,
+        dueDate: _formData.dueDateTime,
         periodicity: _formData.periodicity,
         links: _formData.links,
         folders: _formData.folders,
@@ -50,8 +50,8 @@ class _TodoFormViewState extends State<TodoFormView> {
                 .map((e) => e.trim())
                 .where((e) => e.isNotEmpty)
                 .toList(),
-            startDate: subtaskData.startDate,
-            dueDate: subtaskData.dueDate,
+            startDate: subtaskData.startDateTime,
+            dueDate: subtaskData.dueDateTime,
             periodicity: subtaskData.periodicity,
             links: subtaskData.links,
             folders: subtaskData.folders,
