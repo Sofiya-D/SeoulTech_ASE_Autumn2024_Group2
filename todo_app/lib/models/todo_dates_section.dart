@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/periodicity_toggle.dart';
 import 'package:todo_app/models/quick_date_button.dart';
 // import 'package:todo_app/views/todo_form/todo_form_data.dart';
@@ -56,14 +57,25 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
     }
   }
 
-  void _updatePeriodicity(Duration? periodicity) {
+  void _updatePeriodicity(Periodicity? periodicity) {
     setState(() {
       widget.formData.periodicity = periodicity;
     });
   }
 
+  void _listenToDateChanges() {
+    // if the due date is deleted and the periodicity is active
+    if (widget.formData.dueDate == null && widget.formData.periodicity != null) {
+      // deactivate periodicity
+      setState(() {
+        widget.formData.periodicity = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _listenToDateChanges();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -118,6 +130,7 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
             PeriodicityToggle(
               initialPeriodicity: widget.formData.periodicity,
               onPeriodicityChanged: _updatePeriodicity,
+              dueDate: widget.formData.dueDate,
             ),
             if (widget.formData.dateError != null)
               Padding(

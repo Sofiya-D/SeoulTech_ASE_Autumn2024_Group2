@@ -208,6 +208,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // debug
           print('Nouvelle tâche créée : ${todo.title}');
           taskList.add(todo);
+          setState(() {
+                    selectedIndex = 1;
+                  });
           },
         );
         break;

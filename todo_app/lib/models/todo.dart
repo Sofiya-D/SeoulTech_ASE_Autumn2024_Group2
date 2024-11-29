@@ -1,5 +1,7 @@
 
 
+import 'package:todo_app/models/periodicity.dart';
+
 class Todo {
 
   String title;
@@ -8,7 +10,7 @@ class Todo {
   List<String> tags;
   DateTime? startDate;
   DateTime? dueDate;
-  Duration? periodicity;
+  Periodicity? periodicity;
   bool isDeleted;
   bool isCompleted;
   bool isMissed;
@@ -45,7 +47,7 @@ class TodoTask {
   List<String> tags;
   DateTime? startDate;
   DateTime? dueDate;
-  Duration? periodicity;
+  Periodicity? periodicity;
   bool isDeleted;
   bool isCompleted;
   bool isMissed;

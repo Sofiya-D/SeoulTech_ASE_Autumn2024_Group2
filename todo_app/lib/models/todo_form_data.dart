@@ -1,6 +1,7 @@
 // lib/views/todo_form/todo_form_data.dart
 
 import 'package:flutter/material.dart';
+import 'package:todo_app/models/periodicity.dart';
 
 class TodoFormData {
   // final TextEditingController title = TextEditingController();
@@ -11,7 +12,7 @@ class TodoFormData {
   TextEditingController tags = TextEditingController();
   DateTime? startDate;
   DateTime? dueDate;
-  Duration? periodicity;
+  Periodicity? periodicity;
   int importanceLevel = 1;
   String? dateError;
   final List<SubtaskFormData> subtasks = [];
@@ -49,7 +50,7 @@ class SubtaskFormData {
   TextEditingController tags = TextEditingController();
   DateTime? startDate;
   DateTime? dueDate;
-  Duration? periodicity;
+  Periodicity? periodicity;
   int importanceLevel = 1;
   String? dateError;
   final List<String> links = [];
