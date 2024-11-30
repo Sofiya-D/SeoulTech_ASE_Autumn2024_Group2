@@ -19,15 +19,15 @@ class QuickDateButtons extends StatelessWidget {
     switch (option) {
       case QuickDateOption.today:
         formData.startDate = now;
-        formData.dueDate = now;
+        formData.dueDate = DateTime(now.year, now.month, now.day, 23, 59); //now;
         break;
       case QuickDateOption.thisWeek:
         formData.startDate = now;
-        formData.dueDate = now.add(Duration(days: 6 - now.weekday));
+        formData.dueDate =  DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);//now.add(Duration(days: 7 - now.weekday));
         break;
       case QuickDateOption.thisMonth:
         formData.startDate = now;
-        formData.dueDate = DateTime(now.year, now.month + 1, 0);
+        formData.dueDate = DateTime(now.year, now.month + 1, 0, 23, 59); //DateTime(now.year, now.month + 1, 0);
         break;
     }
     
