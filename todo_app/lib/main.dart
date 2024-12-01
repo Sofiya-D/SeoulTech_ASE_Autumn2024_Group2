@@ -39,7 +39,7 @@ class MyAppState extends ChangeNotifier {
   var taskList= <Todo>[
   Todo(
     title: 'Project',
-    description: 'Total duration of the prject',
+    description: 'Total duration of the project',
     importanceLevel: 1,
     tags: ['work'],
     startDate: DateTime(2024, 11, 1),
