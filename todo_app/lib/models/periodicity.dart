@@ -1,4 +1,4 @@
-
+import 'dart:convert';
 
 class Periodicity {
   final int years;
@@ -28,6 +28,25 @@ class Periodicity {
     DateTime nextDate = DateTime(newYear, newMonth, original.day).add(Duration(days: days));
     
     return nextDate;
+  }
+
+  /// Deserialization from json, to allow fetching data from the SQLite Database
+  factory Periodicity.fromJson(String json) {
+    final Map<String, dynamic> data = jsonDecode(json);
+    return Periodicity(
+      years: data['years'] ?? 0,
+      months: data['months'] ?? 0,
+      days: data['days'] ?? 0,
+    );
+  }
+
+  /// Serialization to json, to allow data storage in the SQLite Database
+  String toJson() {
+    return jsonEncode({
+      'years': years,
+      'months': months,
+      'days': days,
+    });
   }
 
 }
