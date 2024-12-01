@@ -28,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
           // Theme Settings
           ListTile(
             leading: Icon(Icons.color_lens),
-            title: Text('Change Theme'),
+            title: Text('Change Color Theme'),
             trailing: Icon(Icons.chevron_right),
             onTap: () {
               // Navigate to a theme change screen or show a theme selector dialog
