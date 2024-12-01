@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
+
 import 'calendar_page.dart';
 import 'cemetry_page.dart';
 import 'statistics_page.dart';
 import 'tasks_page.dart';
-import 'create_task_page.dart';
 import 'settings_page.dart';
 
 
@@ -21,17 +21,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'To-Do App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        ),
-        home: MyHomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MyAppState()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) {
+          return MaterialApp(
+            title: 'To-Do App',
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSeed(seedColor: themeProvider.themeColor),
+            ), // Light theme
+            darkTheme: ThemeData.dark(), // Dark theme
+            themeMode: themeProvider.themeMode, // Control theme switching
+            home: MyHomePage(),
+          );
+        },
       ),
     );
+  }
+}
+
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode _themeMode = ThemeMode.light;
+  Color _color = Colors.red; // default color 
+
+  ThemeMode get themeMode => _themeMode;
+  Color get themeColor => _color;
+
+  void toggleTheme(bool isDarkMode) {
+    _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
+
+  void changeColor(Color color) {
+    _color = color;
+    notifyListeners();
   }
 }
 

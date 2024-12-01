@@ -8,11 +8,11 @@ class QuickDateButtons extends StatelessWidget {
   final bool isSubtask;
 
   const QuickDateButtons({
-    Key? key, 
+    super.key, 
     required this.formData,
     this.onDateChanged,
     this.isSubtask = false,
-  }) : super(key: key);
+  });
 
   void _setQuickDate(QuickDateOption option) {
     final now = DateTime.now();
@@ -62,10 +62,10 @@ class _QuickDateButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const _QuickDateButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

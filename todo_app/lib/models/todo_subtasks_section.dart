@@ -14,9 +14,9 @@ class TodoSubtasksSection extends StatefulWidget {
   final TodoFormData formData;
 
   const TodoSubtasksSection({
-    Key? key,
+    super.key,
     required this.formData,
-  }) : super(key: key);
+  });
 
   @override
   State<TodoSubtasksSection> createState() => _TodoSubtasksSectionState();
@@ -97,11 +97,11 @@ class SubtaskCard extends StatefulWidget {
   final VoidCallback onRemove;
 
   const SubtaskCard({
-    Key? key,
+    super.key,
     required this.index,
     required this.subtask,
     required this.onRemove,
-  }) : super(key: key);
+  });
 
   @override
   State<SubtaskCard> createState() => _SubtaskCardState();

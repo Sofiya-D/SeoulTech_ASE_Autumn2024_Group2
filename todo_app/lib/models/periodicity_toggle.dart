@@ -15,11 +15,11 @@ class PeriodicityToggle extends StatefulWidget {
   final DateTime? dueDate;
 
   const PeriodicityToggle({
-    Key? key,
+    super.key,
     this.initialPeriodicity,
     required this.onPeriodicityChanged,
     required this.dueDate,
-  }) : super(key: key);
+  });
 
   @override
   _PeriodicityToggleState createState() => _PeriodicityToggleState();

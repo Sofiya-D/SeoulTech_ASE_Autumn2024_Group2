@@ -12,9 +12,9 @@ class TodoDatesSection extends StatefulWidget {
   final TodoFormData formData;
 
   const TodoDatesSection({
-    Key? key,
+    super.key,
     required this.formData,
-  }) : super(key: key);
+  });
 
   @override
   State<TodoDatesSection> createState() => _TodoDatesSectionState();
@@ -218,12 +218,12 @@ class _DateTile extends StatelessWidget {
   final VoidCallback onClear;
 
   const _DateTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.date,
     required this.onTap,
     required this.onClear,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -250,12 +250,12 @@ class _DateTimeTile extends StatelessWidget {
   final VoidCallback onClear;
 
   const _DateTimeTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.dateTime,
     required this.onTap,
     required this.onClear,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

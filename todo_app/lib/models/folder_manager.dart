@@ -11,10 +11,10 @@ class FolderManager extends StatefulWidget {
   final Function(List<String>) onFoldersUpdated;
 
   const FolderManager({
-    Key? key,
+    super.key,
     required this.folders,
     required this.onFoldersUpdated,
-  }) : super(key: key);
+  });
 
   @override
   _FolderManagerState createState() => _FolderManagerState();

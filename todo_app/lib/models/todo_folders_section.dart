@@ -6,9 +6,9 @@ class TodoFoldersSection extends StatefulWidget {
   final TodoFormData formData;
 
   const TodoFoldersSection({
-    Key? key,
+    super.key,
     required this.formData,
-  }) : super(key: key);
+  });
 
   @override
   State<TodoFoldersSection> createState() => _TodoFoldersSectionState();

@@ -6,9 +6,9 @@ class TodoLinksSection extends StatefulWidget {
   final TodoFormData formData;
 
   const TodoLinksSection({
-    Key? key,
+    super.key,
     required this.formData,
-  }) : super(key: key);
+  });
 
   @override
   State<TodoLinksSection> createState() => _TodoLinksSectionState();

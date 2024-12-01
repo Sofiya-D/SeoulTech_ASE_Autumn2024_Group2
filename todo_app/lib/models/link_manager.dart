@@ -7,10 +7,10 @@ class LinkManager extends StatefulWidget {
   final Function(List<String>) onLinksUpdated;
 
   const LinkManager({
-    Key? key,
+    super.key,
     required this.links,
     required this.onLinksUpdated,
-  }) : super(key: key);
+  });
 
   @override
   _LinkManagerState createState() => _LinkManagerState();
@@ -29,7 +29,7 @@ class _LinkManagerState extends State<LinkManager> {
     if (_linkController.text.isNotEmpty) {
       String url = _linkController.text;
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
+        url = 'https://$url';
       }
       
       List<String> updatedLinks = List.from(widget.links)..add(url);

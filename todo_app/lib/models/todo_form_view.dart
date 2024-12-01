@@ -15,7 +15,7 @@ import 'package:todo_app/models/todo_folders_section.dart';
 class TodoFormView extends StatefulWidget {
   final Function(Todo) onSubmit;
 
-  const TodoFormView({Key? key, required this.onSubmit}) : super(key: key);
+  const TodoFormView({super.key, required this.onSubmit});
 
   @override
   _TodoFormViewState createState() => _TodoFormViewState();

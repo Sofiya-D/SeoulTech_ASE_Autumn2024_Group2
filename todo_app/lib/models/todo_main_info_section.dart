@@ -8,9 +8,9 @@ class TodoMainInfoSection extends StatelessWidget {
   final TodoFormData formData;
 
   const TodoMainInfoSection({
-    Key? key,
+    super.key,
     required this.formData,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +63,9 @@ class ImportanceLevelSlider extends StatefulWidget {
   final TodoFormData formData;
 
   const ImportanceLevelSlider({
-    Key? key,
+    super.key,
     required this.formData,
-  }) : super(key: key);
+  });
 
   @override
   State<ImportanceLevelSlider> createState() => _ImportanceLevelSliderState();

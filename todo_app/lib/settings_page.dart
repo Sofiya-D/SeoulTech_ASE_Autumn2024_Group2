@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'main.dart'; // Import ThemeProvider here
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -12,6 +15,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -27,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
             trailing: Icon(Icons.chevron_right),
             onTap: () {
               // Navigate to a theme change screen or show a theme selector dialog
-              _showThemeSelector(context);
+              _showThemeSelector(context, themeProvider);
             },
           ),
           Divider(),
@@ -53,7 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
               setState(() {
                 _textToSpeechEnabled = value; // Update the state
               });
-              handleTextToSpeech(context); // Handle Text-to-speech toggle
+              _handleTextToSpeech(context); // Handle Text-to-speech toggle
             },
           ),
           Divider(),
@@ -67,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
               setState(() {
                 _speechToTextEnabled = value; // Update the state
               });
-              handleSpeechToText(context);// Handle Speech-to-Text toggle
+              _handleSpeechToText(context);// Handle Speech-to-Text toggle
             },
           ),
           Divider(),
@@ -110,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   // Theme Selector Dialog
-  void _showThemeSelector(BuildContext context) {
+  void _showThemeSelector(BuildContext context, ThemeProvider themeProvider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -119,37 +124,29 @@ class _SettingsPageState extends State<SettingsPage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                leading: Icon(Icons.light_mode),
-                title: Text('Light Theme'),
-                onTap: () {
-                  // Apply light theme
-                  Navigator.pop(context);
+              SwitchListTile(
+                value: themeProvider.themeMode == ThemeMode.dark,
+                title: Text('Enable Dark Theme'),
+                secondary: Icon(Icons.dark_mode),
+                onChanged: (isDarkMode) {
+                  themeProvider.toggleTheme(isDarkMode);
                 },
               ),
               ListTile(
-                leading: Icon(Icons.dark_mode),
-                title: Text('Dark Theme'),
-                onTap: () {
-                  // Apply dark theme
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.auto_awesome),
-                title: Text('System Default'),
-                onTap: () {
-                  // Apply system default theme
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.auto_awesome),
+                leading: Icon(Icons.palette),
                 title: Text('Personnalized Color Theme'),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   // Apply system default theme
-                  Navigator.pop(context);
+                  _handleChangingColor(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.auto_awesome),
+                title: Text('Default Color Settings'),
+                onTap: () {
+                  // Apply system default theme
+                  context.read<ThemeProvider>().changeColor(Colors.red);
                 },
               ),
             ],
@@ -158,6 +155,43 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
+
+  Future<void> _handleChangingColor(BuildContext context) async {
+    Color selectedColor = Colors.red; // Default fallback color
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pick a Color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: selectedColor,
+              onColorChanged: (Color color) {
+                selectedColor = color; // Update the selected color
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context); // Close dialog without applying changes
+              },
+            ),
+            TextButton(
+              child: Text('APPLY'),
+              onPressed: () {
+                context.read<ThemeProvider>().changeColor(selectedColor);
+                Navigator.pop(context); // Close dialog and apply the selected color
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   // Notification Settings
   void _showNotificationSettings(BuildContext context) {
@@ -178,7 +212,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     _notificationsEnabled = value; // Update the state
                     Navigator.pop(context);
                   });
-                  handleNotification(context);// Handle notifications toggle
+                  _handleNotification(context);// Handle notifications toggle
                 },
               ),
               ListTile(
@@ -206,7 +240,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void handleNotification(BuildContext context) {
+  void _handleNotification(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -242,7 +276,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   // Text-to-speech
-  void handleTextToSpeech(BuildContext context) {
+  void _handleTextToSpeech(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -277,7 +311,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
   
   // Speech-to-text
-  void handleSpeechToText(BuildContext context) {
+  void _handleSpeechToText(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
