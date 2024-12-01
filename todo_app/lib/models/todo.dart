@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:todo_app/models/periodicity.dart';
+
 class Todo {
-  // we need :
-  // title
-  // description
-  // importance level
-  // tags
-  // start date
-  // due date
-  // periodicity (step ?)
-  // is_deleted tag
-  // is_completed tag
-  // is_missed/is_due tag
-  // smaller task list
-  // folder/links list
-  // point value
 
   String title;
   String description;
@@ -22,7 +10,7 @@ class Todo {
   List<String> tags;
   DateTime? startDate;
   DateTime? dueDate;
-  Duration? periodicity;
+  Periodicity? periodicity;
   bool isDeleted;
   bool isCompleted;
   bool isMissed;
@@ -54,24 +42,6 @@ class Todo {
 }
 
 class TodoTask {
-  // we need :
-  // title
-  // description
-  // intermediate steps (text list)
-  // start date
-  // due date
-  // periodicity (step ?)
-  // is_deleted tag
-  // is_completed tag
-  // is_missed/is_due tag
-  // folder/links list
-
-  // maybe :
-  // tags
-  // points
-
-  // not sure :
-  // importance level
 
   String title;
   String description;
@@ -79,11 +49,10 @@ class TodoTask {
   List<String> tags;
   DateTime? startDate;
   DateTime? dueDate;
-  Duration? periodicity;
+  Periodicity? periodicity;
   bool isDeleted;
   bool isCompleted;
   bool isMissed;
-  List<TodoTask> tasks;
   List<String> folders;
   List<String> links;
   int points;
@@ -99,7 +68,6 @@ class TodoTask {
     this.isDeleted = false,
     this.isCompleted = false,
     this.isMissed = false,
-    this.tasks = const [],
     this.folders = const [],
     this.links = const [],
     this.points = 0,
