@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/main.dart'; // Import the state management file containing `MyAppState`
+import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart'; // Import the file where `Todo` is defined
 
 /// !TODO! add filter (case: page "today" is a subset of "due-date")
@@ -490,12 +491,12 @@ String? getTaskDateString(DateTime? startDate, DateTime? endDate) {
   }
 }
 
-String? getTaskPeriodicityString(Duration? periodicity) {
-  if (periodicity == null || periodicity.inDays <= 0) {
+String? getTaskPeriodicityString(Periodicity? periodicity) {
+  if (periodicity == null ||  (periodicity.years <= 0 && periodicity.months <= 0 && periodicity.days <= 0) ) {
     return null; // For null or zero duration
   }
 
-  int days = periodicity.inDays;
+  int days = periodicity.days;
 
   if (days < 7) {
     // Less than a week, use days

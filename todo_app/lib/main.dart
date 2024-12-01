@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
 import 'calendar_page.dart';
@@ -10,10 +11,7 @@ import 'create_task_page.dart';
 import 'settings_page.dart';
 
 
-// void main() {
-//   runApp(const MyApp());
-// }
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -50,7 +48,7 @@ class MyAppState extends ChangeNotifier {
     tags: ['work'],
     startDate: DateTime(2024, 11, 1),
     dueDate: DateTime(2024, 12, 15),
-    periodicity: Duration(days: 30),
+    periodicity: Periodicity(months: 1),
     isCompleted: false,
     points: 20,
   ),
@@ -91,7 +89,7 @@ class MyAppState extends ChangeNotifier {
       tags: ['Documentation', 'Critical', 'Development'],
       startDate: DateTime(2024, 11, 24, 9, 0),
       dueDate: DateTime(2024, 12, 1, 17, 0),
-      periodicity: Duration(days: 0), // Non-recurring task
+      //periodicity: Duration(days: 0), // Non-recurring task
       isDeleted: false,
       isCompleted: false,
       isMissed: false,
@@ -184,7 +182,7 @@ class MyAppState extends ChangeNotifier {
           'Regular meetings to sync with the team about daily tasks and blockers.',
       importanceLevel: 1,
       tags: ['Meeting', 'Daily'],
-      periodicity: Duration(days: 1), // Recurring task
+      periodicity: Periodicity(days: 1), // Recurring task
       isCompleted: false,
       folders: ['Team/StandUps'],
       links: [],
@@ -220,7 +218,7 @@ class MyAppState extends ChangeNotifier {
       description: 'Enhance knowledge by reading a new book weekly.',
       importanceLevel: 1,
       tags: ['Personal', 'Reading'],
-      periodicity: Duration(days: 7), // Recurring task
+      periodicity: Periodicity(days: 7), // Recurring task
       isCompleted: false,
       folders: ['Personal/Development'],
       links: ['https://readinglist.app'],
@@ -451,7 +449,7 @@ class MyAppState extends ChangeNotifier {
       tags: ["work", "meeting", "important"],
       startDate: DateTime(2024, 11, 25, 9, 0),
       dueDate: DateTime(2024, 11, 26, 18, 0),
-      periodicity: Duration(days: 1),
+      periodicity: Periodicity(days: 1),
       isDeleted: false,
       isCompleted: false,
       isMissed: false,
