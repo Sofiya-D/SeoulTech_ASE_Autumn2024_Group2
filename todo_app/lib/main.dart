@@ -293,7 +293,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Settings'),
                 onTap: () {
                   setState(() {
-                    selectedIndex = 4;
+                    selectedIndex = 5;
                   });
                   Navigator.pop(context);
                 },

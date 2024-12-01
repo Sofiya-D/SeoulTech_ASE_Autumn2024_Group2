@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool _notificationsEnabled = false;
+  bool _textToSpeechEnabled = false;
+  bool _speechToTextEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,34 +33,52 @@ class SettingsPage extends StatelessWidget {
           Divider(),
 
           // Notifications Settings
+          ListTile(
+            leading: Icon(Icons.notifications),
+            title: Text('Notification Settings'),
+            trailing: Icon(Icons.chevron_right),
+            onTap: () {
+              // Navigate to a notification change screen
+              _showNotificationSettings(context);
+            },
+          ),
+          Divider(),
+
+          // Text-to-Speech Enabler
           SwitchListTile(
-            value: true, // Replace with actual value from state management
-            title: Text('Enable Notifications'),
-            secondary: Icon(Icons.notifications),
+            value: _textToSpeechEnabled, // Replace with actual value from state management
+            title: Text('Enable Text-to-Speech'),
+            secondary: Icon(Icons.hearing),
             onChanged: (value) {
-              // Handle notifications toggle
+              setState(() {
+                _textToSpeechEnabled = value; // Update the state
+              });
+              handleTextToSpeech(context); // Handle Text-to-speech toggle
             },
           ),
           Divider(),
 
-          // Account Settings
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Account Preferences'),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to account settings
+          // Speech-to-Text Enabler
+          SwitchListTile(
+            value: _speechToTextEnabled, // Replace with actual value from state management
+            title: Text('Enable Speech-to-Text'),
+            secondary: Icon(Icons.mic_outlined),
+            onChanged: (value) {
+              setState(() {
+                _speechToTextEnabled = value; // Update the state
+              });
+              handleSpeechToText(context);// Handle Speech-to-Text toggle
             },
           ),
           Divider(),
 
-          // Language Settings
+          // Tags Settings
           ListTile(
-            leading: Icon(Icons.language),
-            title: Text('Change Language'),
+            leading: Icon(Icons.tag_sharp),
+            title: Text('New Tags'),
             trailing: Icon(Icons.chevron_right),
             onTap: () {
-              // Navigate to language settings
+              _showTagSettings(context); // Navigate to Tags settings
             },
           ),
           Divider(),
@@ -68,6 +95,128 @@ class SettingsPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Tag Settings
+  void _showTagSettings(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add new Tags'),
+        );
+      }
+    );
+  }
+
+  // Speech-to-text
+  void handleSpeechToText(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        if (_notificationsEnabled == true) {
+          return AlertDialog(
+            title: Text('Speech-To-Text Enabled'),
+          );
+        }
+        else {
+          return AlertDialog(
+            title: Text('Speech-To-Text Disabled'),
+          );
+        }
+      },
+    );
+  }
+
+  // Text-to-speech
+  void handleTextToSpeech(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        if (_notificationsEnabled == true) {
+          return AlertDialog(
+            title: Text('Text-To-Speech Enabled'),
+          );
+        }
+        else {
+          return AlertDialog(
+            title: Text('Text-To-Speech Disabled'),
+          );
+        }
+        
+      },
+    );
+  }
+
+  // Notification Settings
+  void _showNotificationSettings(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Theme'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchListTile(
+                value: _notificationsEnabled, // Replace with actual value from state management
+                title: Text('Enable Notifications'),
+                secondary: Icon(Icons.notifications),
+                onChanged: (value) {
+                  setState(() {
+                    _notificationsEnabled = value; // Update the state
+                  });
+                  handleNotification(context);// Handle notifications toggle
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.light_mode),
+                title: Text('Light Theme'),
+                onTap: () {
+                  // Apply light theme
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.dark_mode),
+                title: Text('Dark Theme'),
+                onTap: () {
+                  // Apply dark theme
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.auto_awesome),
+                title: Text('System Default'),
+                onTap: () {
+                  // Apply system default theme
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void handleNotification(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        if (_notificationsEnabled == true) {
+          return AlertDialog(
+            title: Text('Notification Enabled'),
+          );
+        }
+        else {
+          return AlertDialog(
+            title: Text('Notification Disabled'),
+          );
+        }
+        
+      },
     );
   }
 
