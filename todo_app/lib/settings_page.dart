@@ -74,11 +74,22 @@ class _SettingsPageState extends State<SettingsPage> {
 
           // Tags Settings
           ListTile(
-            leading: Icon(Icons.tag_sharp),
+            leading: Icon(Icons.label),
             title: Text('New Tags'),
             trailing: Icon(Icons.chevron_right),
             onTap: () {
               _showTagSettings(context); // Navigate to Tags settings
+            },
+          ),
+          Divider(),
+
+          // Custom Repeating Period Settings
+          ListTile(
+            leading: Icon(Icons.calendar_month),
+            title: Text('Custom repeating period'),
+            trailing: Icon(Icons.chevron_right),
+            onTap: () {
+              _showPeriodSettings(context); // Navigate to Period settings
             },
           ),
           Divider(),
@@ -95,128 +106,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
-    );
-  }
-
-  // Tag Settings
-  void _showTagSettings(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Add new Tags'),
-        );
-      }
-    );
-  }
-
-  // Speech-to-text
-  void handleSpeechToText(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        if (_notificationsEnabled == true) {
-          return AlertDialog(
-            title: Text('Speech-To-Text Enabled'),
-          );
-        }
-        else {
-          return AlertDialog(
-            title: Text('Speech-To-Text Disabled'),
-          );
-        }
-      },
-    );
-  }
-
-  // Text-to-speech
-  void handleTextToSpeech(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        if (_notificationsEnabled == true) {
-          return AlertDialog(
-            title: Text('Text-To-Speech Enabled'),
-          );
-        }
-        else {
-          return AlertDialog(
-            title: Text('Text-To-Speech Disabled'),
-          );
-        }
-        
-      },
-    );
-  }
-
-  // Notification Settings
-  void _showNotificationSettings(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Theme'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SwitchListTile(
-                value: _notificationsEnabled, // Replace with actual value from state management
-                title: Text('Enable Notifications'),
-                secondary: Icon(Icons.notifications),
-                onChanged: (value) {
-                  setState(() {
-                    _notificationsEnabled = value; // Update the state
-                  });
-                  handleNotification(context);// Handle notifications toggle
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.light_mode),
-                title: Text('Light Theme'),
-                onTap: () {
-                  // Apply light theme
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.dark_mode),
-                title: Text('Dark Theme'),
-                onTap: () {
-                  // Apply dark theme
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.auto_awesome),
-                title: Text('System Default'),
-                onTap: () {
-                  // Apply system default theme
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void handleNotification(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        if (_notificationsEnabled == true) {
-          return AlertDialog(
-            title: Text('Notification Enabled'),
-          );
-        }
-        else {
-          return AlertDialog(
-            title: Text('Notification Disabled'),
-          );
-        }
-        
-      },
     );
   }
 
@@ -254,10 +143,223 @@ class _SettingsPageState extends State<SettingsPage> {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.auto_awesome),
+                title: Text('Personnalized Color Theme'),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  // Apply system default theme
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         );
       },
+    );
+  }
+
+  // Notification Settings
+  void _showNotificationSettings(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Theme'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchListTile(
+                value: _notificationsEnabled, // Replace with actual value from state management
+                title: Text('Enable Notifications'),
+                secondary: Icon(Icons.notifications),
+                onChanged: (value) {
+                  setState(() {
+                    _notificationsEnabled = value; // Update the state
+                    Navigator.pop(context);
+                  });
+                  handleNotification(context);// Handle notifications toggle
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.access_time),
+                title: Text('Set reminder times'),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  // Apply light theme
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.cast_for_education),
+                title: Text('Set encouragement times'),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  // Apply dark theme
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void handleNotification(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        if (_notificationsEnabled == true) {
+          return AlertDialog(
+            title: Text('Notification Enabled'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
+        else {
+          return AlertDialog(
+            title: Text('Notification Disabled'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
+        
+      },
+    );
+  }
+
+  // Text-to-speech
+  void handleTextToSpeech(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        if (_textToSpeechEnabled == true) {
+          return AlertDialog(
+            title: Text('Text-To-Speech Enabled'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
+        else {
+          return AlertDialog(
+            title: Text('Text-To-Speech Disabled'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+  
+  // Speech-to-text
+  void handleSpeechToText(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        if (_speechToTextEnabled == true) {
+          return AlertDialog(
+            title: Text('Speech-To-Text Enabled'),actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
+        else {
+          return AlertDialog(
+            title: Text('Speech-To-Text Disabled'),actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  // Tag Settings
+  void _showTagSettings(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Tags'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.new_label),
+                title: Text('Add new tags'),
+                onTap: () {
+                  // Apply light theme
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.list),
+                title: Text('List of exisiting tags'),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  // Apply dark theme
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  // Custom Repeating Period Settings
+  void _showPeriodSettings(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Custom Repeating Period'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      }
     );
   }
 
