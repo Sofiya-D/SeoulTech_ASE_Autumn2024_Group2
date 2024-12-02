@@ -5,9 +5,17 @@ import 'package:todo_app/main.dart'; // Import the state management file contain
 import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart'; // Import the file where `Todo` is defined
 
+import 'package:todo_app/models/task_sorter.dart';
+
 /// !TODO! add filter (case: page "today" is a subset of "due-date")
 
-class TasksPage extends StatelessWidget {
+class TasksPage extends StatefulWidget {
+  @override
+  TasksPageState createState() => TasksPageState();
+}
+
+class TasksPageState extends State<TasksPage> {
+  String selectedSort = 'priority'; // Default sorting criteria
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +31,48 @@ class TasksPage extends StatelessWidget {
       );
     }
 
-    return ListView(
+    // Sort tasks based on the selected criteria
+    var sortedTasks = sortTasks(appState.taskList, selectedSort);
+
+    return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            'You have ${appState.taskList.length} tasks:',
-            style: titleStyle,
-          ),
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                'You have ${sortedTasks.length} tasks:',
+                style: titleStyle,
+              ),
+            ),
+            // Add the sorting selector
+            DropdownButton<String>(
+              value: selectedSort,
+              items: [
+                DropdownMenuItem(
+                    value: 'priority', child: Text('Sort by Priority')),
+                DropdownMenuItem(
+                    value: 'dueDate', child: Text('Sort by Due Date')),
+                DropdownMenuItem(value: 'title', child: Text('Sort by Title')),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    selectedSort = value; // Update the sorting criteria
+                  });
+                }
+              },
+            ),
+          ],
         ),
-        for (var task in appState.taskList)
-          _TaskListCard(
-            task: task,
-          ),
+        ListView(
+          children: [
+            for (var task in sortedTasks)
+              _TaskListCard(
+                task: task,
+              ),
+          ],
+        ),
       ],
     );
   }
@@ -114,9 +151,9 @@ class TaskCardFirstSection extends StatelessWidget {
       color: theme.colorScheme.onPrimary,
     );
 
-    var sortingMethod = "date";
+    var sortBy = "date";
     String? label;
-    switch (sortingMethod) {
+    switch (sortBy) {
       case "date":
         label = task.dueDate != null
             ? DateFormat('MMM d').format(task.dueDate!)
@@ -133,7 +170,8 @@ class TaskCardFirstSection extends StatelessWidget {
         label = null;
         break;
       default:
-        throw UnimplementedError('no sorting method chosen for task viewing');
+        throw UnimplementedError(
+            'Unhandled sorting parameter chosen for task viewing');
     }
 
     return Row(
@@ -243,7 +281,7 @@ class TaskCardSecondSection extends StatelessWidget {
             ? Row(
                 children: [
                   if (task.startDate != null) Icon(Icons.event),
-                  if (getTaskPeriodicityString(task.periodicity) != null)
+                  if (formatTaskPeriodicity(task.periodicity) != null)
                     Icon(Icons.event_repeat),
                   if (task.description.isNotEmpty) Icon(Icons.description),
                   if (task.tasks.isNotEmpty) Icon(Icons.playlist_play),
@@ -273,8 +311,8 @@ class TaskCardThirdSection extends StatelessWidget {
     var theme = Theme.of(context);
     var contentStyle = theme.textTheme.bodyMedium!
         .copyWith(color: theme.colorScheme.onSurface);
-    var taskDateStr = getTaskDateString(task.startDate, task.dueDate);
-    var taskPeriodicityStr = getTaskPeriodicityString(task.periodicity);
+    var taskDateStr = formatTaskDate(task.startDate, task.dueDate);
+    var taskPeriodicityStr = formatTaskPeriodicity(task.periodicity);
 
     return AnimatedSize(
       duration: Duration(milliseconds: 300),
@@ -476,7 +514,22 @@ class TaskCardThirdSection extends StatelessWidget {
   }
 }
 
-String? getTaskDateString(DateTime? startDate, DateTime? endDate) {
+class DueDateTaskList extends StatelessWidget {
+  const DueDateTaskList({
+    super.key,
+    required this.task,
+  });
+
+  final Todo task;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+
+String? formatTaskDate(DateTime? startDate, DateTime? endDate) {
   // Define the desired date format
   DateFormat formatter = DateFormat('MMM d');
 
@@ -492,8 +545,11 @@ String? getTaskDateString(DateTime? startDate, DateTime? endDate) {
   }
 }
 
-String? getTaskPeriodicityString(Periodicity? periodicity) {
-  if (periodicity == null ||  (periodicity.years <= 0 && periodicity.months <= 0 && periodicity.days <= 0) ) {
+String? formatTaskPeriodicity(Periodicity? periodicity) {
+  if (periodicity == null ||
+      (periodicity.years <= 0 &&
+          periodicity.months <= 0 &&
+          periodicity.days <= 0)) {
     return null; // For null or zero duration
   }
 
