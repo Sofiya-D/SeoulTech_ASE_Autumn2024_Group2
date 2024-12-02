@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
-import 'package:todo_app/models/database_helper.dart'; // to manage the tasks database
+import 'package:todo_app/models/database_manager.dart'; // to manage the tasks database
 import 'calendar_page.dart';
 import 'cemetry_page.dart';
 import 'statistics_page.dart';
@@ -11,27 +10,28 @@ import 'tasks_page.dart';
 // import 'create_task_page.dart';
 import 'settings_page.dart';
 
-import 'package:todo_app/test_data/example_tasks.dart';
+// import 'package:todo_app/test_data/example_tasks.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final dbHelper = DatabaseHelper.instance;
-  final dbExists = await dbHelper.databaseExists();
+  final dbManager = DatabaseManager.instance;
+  final dbExists = await dbManager.exists();
 
   if (dbExists) {
     print('Database exists. Proceeding with the app.');
   } else {
     print('Database does not exist. Creating a new one.');
-    await dbHelper.database;
+    await dbManager.database;
   }
 
   // !! TEMPORARY !! - for dev/debug purposes
-  // Set the tasks database to the example_tasks set of tasks
-  await DatabaseHelper.instance.setAllTasks(exampleTasks);
+  // await DatabaseManager.instance.setAllTasks(exampleTasks); // Sets the Database to the example_tasks set of tasks
+  // await DatabaseManager.instance.delete(); // !! caution !! Deletes any previously present database
+  // await DatabaseManager.instance.insertMultipleTasks(exampleTasks); // Inserts the example_tasks set of tasks into the database
   // !! /TEMPORARY !!
 
-  final tasks = await DatabaseHelper.instance.getAllTasks(); // Retrieve tasks from SQLite.
+  final tasks = await DatabaseManager.instance.getAllTasks(); // Retrieve tasks from SQLite.
 
   runApp(MyApp(tasks: tasks)); // Pass tasks to MyApp
 }
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
         break;
       case 1:
-        page = TasksPage(tasks: taskList);
+        page = TasksPage();
         break;
       case 2:
         page = CalendarPage();

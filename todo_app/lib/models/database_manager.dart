@@ -1,9 +1,8 @@
-import 'dart:io'; // for overall files ineractions/management
 import 'package:sqflite/sqflite.dart'; // for SQL files interactions/management
 import 'package:path/path.dart';
 import 'package:todo_app/models/todo.dart';
 
-class DatabaseHelper {
+class DatabaseManager {
   static const String dbName =
       'exampleTasks.db'; // !! TEMPORARY !! - For dev & debug purposes, change/remove before release !
   static const int dbVersion = 1;
@@ -13,15 +12,23 @@ class DatabaseHelper {
   static const String subtasksTable = 'subtasks';
 
   // Singleton instance
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
-  DatabaseHelper._privateConstructor();
+  // To ensure only 1 database exists
+  static final DatabaseManager instance = DatabaseManager._privateConstructor();
+  DatabaseManager._privateConstructor();
 
   static Database? _database;
 
-  Future<bool> databaseExists() async {
+  ///
+  /// Checks if the database already exists
+  /// 
+  /// true -> the database exists
+  /// 
+  /// false -> the database doesn't exist
+  /// 
+  Future<bool> exists() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, dbName);
-    return await File(path).exists();
+    return databaseExists(path); // Use sqflite's built-in method
   }
 
   Future<Database> get database async {
@@ -65,7 +72,7 @@ class DatabaseHelper {
   ''');
 
     // Subtasks Table
-await db.execute('''
+    await db.execute('''
   CREATE TABLE IF NOT EXISTS $subtasksTable (
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
@@ -84,13 +91,18 @@ await db.execute('''
     FOREIGN KEY (parentId) REFERENCES $tasksTable(id)  -- Foreign key referencing the tasks table
   )
 ''');
-
   }
 
+  ///
   /// To insert multiple tasks into the tasks database.
+  ///
+  /// will trigger the database creation if it doesn't exist yet
+  ///
   Future<void> insertMultipleTasks(List<Todo> tasks) async {
-    final db =
-        await database; // Ensure this points to your initialized database.
+    // Ensure 'db' points to our initialized database.
+    // will also create the database if needed
+    final db = await database;
+
     for (var task in tasks) {
       // Insert the main task.
       int taskId = await db.insert(tasksTable, task.toMap());
@@ -104,6 +116,9 @@ await db.execute('''
     }
   }
 
+  ///
+  /// Fetches all the tasks from the database
+  /// 
   Future<List<Todo>> getAllTasks() async {
     // Open the database
     final db = await database;
@@ -118,9 +133,20 @@ await db.execute('''
     }).toList();
   }
 
+  ///
   /// To set the entire database to a defined set of tasks
+  ///
+  /// !! caution !! Deletes all previously present tasks
+  ///
   Future<void> setAllTasks(List<Todo> tasks) async {
-    await deleteDatabase(join(await getDatabasesPath(), dbName));
+    await delete();
     await insertMultipleTasks(tasks);
+  }
+
+  ///
+  /// To delete the database
+  ///
+  Future<void> delete() async {
+    await deleteDatabase(join(await getDatabasesPath(), dbName));
   }
 }
