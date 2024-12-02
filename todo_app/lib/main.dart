@@ -641,7 +641,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = TasksPage();
         break;
       case 2:
-        page = CalendarPage();
+        page = CalendarPage(taskList: taskList);
         break;
       case 3:
         page = StatisticsPage();
