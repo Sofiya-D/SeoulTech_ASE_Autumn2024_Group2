@@ -43,19 +43,53 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
+/*
+  Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
+    final Map<DateTime, List<Todo>> events = {};
+
+    for (var todo in todos) {
+      // Handle tasks with periodicity
+      if (todo.periodicity != null && todo.dueDate != null) {
+        DateTime current = todo.startDate ?? todo.dueDate!;
+        while (!current.isAfter(todo.dueDate!)) {
+          final date = DateTime(current.year, current.month, current.day); // Normalize date
+          if (!_isInstanceCompleted(todo, date)) {
+            events.putIfAbsent(date, () => []).add(todo);
+          }
+          current = todo.periodicity!.calculateNextOccurrence(current);
+        }
+      } 
+      else if (todo.startDate != null && todo.dueDate != null) {
+        DateTime current = todo.startDate!;
+        while (!current.isAfter(todo.dueDate!)) {
+          final date = DateTime(current.year, current.month, current.day); // Normalize date
+          events.putIfAbsent(date, () => []).add(todo);
+          current = current.add(const Duration(days: 1));
+        }
+      } 
+      else if (todo.dueDate != null) {
+        final date = DateTime(todo.dueDate!.year, todo.dueDate!.month, todo.dueDate!.day);
+        events.putIfAbsent(date, () => []).add(todo);
+      }
+    }
+
+    return events;
+  }
+*/ 
+/*
   Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
   final Map<DateTime, List<Todo>> events = {};
 
   for (var todo in todos) {
     // Handle tasks with periodicity
-    if (todo.periodicity != null) {
+    if (todo.periodicity != null && todo.dueDate != null) {
       DateTime current = todo.startDate ?? todo.dueDate!;
-      while (!current.isAfter(todo.dueDate!.add(todo.periodicity!.toDuration()))) {
+      while (!current.isAfter(todo.dueDate!)) {
         final date = DateTime(current.year, current.month, current.day); // Normalize date
         if (!_isInstanceCompleted(todo, date)) {
           events.putIfAbsent(date, () => []).add(todo);
         }
-        current = current.add(todo.periodicity!.toDuration());
+        current = todo.periodicity!.calculateNextOccurrence(current);
       }
     } 
     // Handle tasks with a range of dates
@@ -80,7 +114,27 @@ class _CalendarPageState extends State<CalendarPage> {
 
   return events;
 }
+*/
 
+Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
+    final Map<DateTime, List<Todo>> events = {};
+
+    for (var todo in todos) {
+      if (todo.startDate != null && todo.dueDate != null) {
+        DateTime current = todo.startDate!;
+        while (!current.isAfter(todo.dueDate!)) {
+          final date = DateTime(current.year, current.month, current.day);
+          events.putIfAbsent(date, () => []).add(todo);
+          current = current.add(const Duration(days: 1));
+        }
+      } else if (todo.dueDate != null) {
+        final date = DateTime(todo.dueDate!.year, todo.dueDate!.month, todo.dueDate!.day);
+        events.putIfAbsent(date, () => []).add(todo);
+      }
+    }
+
+    return events;
+  }
 
 /*
   Map<DateTime, List<Todo>> _groupTasksByDueDate(List<Todo> todos) {
@@ -362,7 +416,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     _completedInstances[normalizedDate]?.remove(task);
 
                     // Clean up empty sets to avoid memory issues
-                    if (_completedInstances[normalizedDate]?.isEmpty ?? false) {
+                    if (_completedInstances[normalizedDate]?.isEmpty ?? true) {
                       _completedInstances.remove(normalizedDate);
                     }
                   } 
@@ -370,6 +424,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     // Mark the task as completed for this date
                     _completedInstances.putIfAbsent(normalizedDate, () => {}).add(task);
                   }
+                  _events = _generateDateRangeEvents(widget.taskList);
                   print('After: $_completedInstances');
                 });
               },

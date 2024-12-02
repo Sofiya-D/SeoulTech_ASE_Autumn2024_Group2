@@ -22,10 +22,18 @@ class Periodicity {
     if (newMonth > 12) {
       newYear += (newMonth ~/ 12);
       newMonth = newMonth % 12;
+      if (newMonth == 0) {
+        newMonth = 12;
+        newYear -= 1;
+      }
     }
+
+    // Handle days overflow and leap year scenarios
+    int maxDay = DateTime(newYear, newMonth + 1, 0).day; // Last day of new month
+    int newDay = original.day <= maxDay ? original.day : maxDay;
     
     // add days
-    DateTime nextDate = DateTime(newYear, newMonth, original.day).add(Duration(days: days));
+    DateTime nextDate = DateTime(newYear, newMonth, newDay).add(Duration(days: days));
     
     return nextDate;
   }
