@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:todo_app/models/periodicity.dart';
+import 'package:todo_app/models/notification_service.dart';
+
 
 class Todo {
 
@@ -20,6 +22,8 @@ class Todo {
   int points;
   Color? taskColor;
 
+  List<NotificationInfo> notificationIds = [];
+
   Todo({
     required this.title,
     this.description = '',
@@ -38,6 +42,21 @@ class Todo {
     this.taskColor,
   });
 
+  Future<void> scheduleNotifications(NotificationService notificationService) async {
+    // Planifier les notifications pour la date de début
+    if (startDate != null) {
+      await notificationService.scheduleTodoNotifications(
+        todo: this,
+      );
+    }
+
+    // Planifier les notifications pour la date d'échéance
+    if (dueDate != null) {
+      await notificationService.scheduleTodoNotifications(
+        todo: this, 
+      );
+    }
+  }
 
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/models/notification_service.dart';
 import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
@@ -12,30 +13,61 @@ import 'settings_page.dart';
 
 
 void main() async {
-  runApp(MyApp());
+  // Ensure Flutter binding is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize the notification service
+  final notificationService = NotificationService();
+  await notificationService.init();
+
+  runApp(MyApp(notificationService: notificationService));
 }
 
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final NotificationService notificationService;
+
+  const MyApp({super.key, required this.notificationService});
+
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+      create: (context) => MyAppState(notificationService),
       child: MaterialApp(
         title: 'To-Do App',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         ),
-        home: MyHomePage(),
+        home: MyHomePage(notificationService: notificationService),
       ),
     );
   }
 }
 
 class MyAppState extends ChangeNotifier {
+  final NotificationService _notificationService;
+
+  MyAppState(this._notificationService);
+
+  void addTask(Todo todo) {
+    taskList.add(todo);
+    // Schedule notifications for the new task
+    _notificationService.testNotificationImmediately(todo);
+    todo.scheduleNotifications(_notificationService);
+    _notificationService.checkPendingNotificationRequests();
+    notifyListeners();
+  }
+
+  void removeTask(Todo todo) {
+    // Cancel existing notifications for the task
+    _notificationService.cancelTodoNotifications(todo);
+    taskList.remove(todo);
+    notifyListeners();
+  }
+
+
     // var taskList = <Todo>[];
 
   // !! SHOULD BE REMOVED !!
@@ -583,27 +615,29 @@ class MyAppState extends ChangeNotifier {
 }
 
 class MyHomePage extends StatefulWidget {
+  final NotificationService notificationService;
+
+  const MyHomePage({super.key, required this.notificationService});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 1;
-  
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var taskList = appState.taskList;
     Widget page;
+
+
     switch (selectedIndex) {
       case 0:
         // page = CreateTaskPage();
         page = TodoFormView(
         onSubmit: (Todo todo) {
-          // debug
-          print('Nouvelle tâche créée : ${todo.title}');
-          taskList.add(todo);
+          appState.addTask(todo);
           setState(() {
                     selectedIndex = 1;
                   });
