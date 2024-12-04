@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'main.dart'; // Import ThemeProvider here
+
+import 'main.dart'; 
+import 'settings_manager.dart';
+import 'floating_buttons.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -10,8 +13,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = false;
-  bool _textToSpeechEnabled = false;
-  bool _speechToTextEnabled = false;
+  //bool _textToSpeechEnabled = false;
+  //bool _speechToTextEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,30 +54,50 @@ class _SettingsPageState extends State<SettingsPage> {
 
           // Text-to-Speech Enabler
           SwitchListTile(
-            value: _textToSpeechEnabled, // Replace with actual value from state management
+            value: settingsManager.textToSpeechEnabled, // Replace with actual value from state management
             title: Text('Enable Text-to-Speech'),
             secondary: Icon(Icons.hearing),
             onChanged: (value) {
               setState(() {
-                _textToSpeechEnabled = value; // Update the state
+                settingsManager.textToSpeechEnabled = value; // Update the state
               });
-              _handleTextToSpeech(context); // Handle Text-to-speech toggle
+              //_handleTextToSpeech(context); // Handle Text-to-speech toggle
             },
           ),
+          /*if (_textToSpeechEnabled) // Button appears when Text-to-Speech is enabled
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  _handleTextToSpeech(context);
+                },
+                child: Text('Perform Text-to-Speech Action'),
+              ),
+            ),*/
           Divider(),
 
           // Speech-to-Text Enabler
           SwitchListTile(
-            value: _speechToTextEnabled, // Replace with actual value from state management
+            value: settingsManager.speechToTextEnabled, // Replace with actual value from state management
             title: Text('Enable Speech-to-Text'),
             secondary: Icon(Icons.mic_outlined),
             onChanged: (value) {
               setState(() {
-                _speechToTextEnabled = value; // Update the state
+                settingsManager.speechToTextEnabled = value; // Update the state
               });
-              _handleSpeechToText(context);// Handle Speech-to-Text toggle
+              //_handleSpeechToText(context);// Handle Speech-to-Text toggle
             },
           ),
+          /*if (_speechToTextEnabled) // Button appears when Speech-to-Text is enabled
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  _handleSpeechToText(context);
+                },
+                child: Text('Perform Speech-to-Text Action'),
+              ),
+            ),*/
           Divider(),
 
           // Tags Settings
@@ -111,6 +134,39 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingButtons(
+        onTextToSpeechPressed: () {
+          settingsManager.handleTextToSpeech(context);
+        },
+        onSpeechToTextPressed: () {
+          settingsManager.handleSpeechToText(context);
+        },
+      ),
+      /*floatingActionButton: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (_textToSpeechEnabled)
+          FloatingActionButton(
+            heroTag: "textToSpeechButton",
+            onPressed: () {
+              _handleTextToSpeech(context);
+            },
+            tooltip: 'Text-to-Speech Action',
+            child: Icon(Icons.hearing),
+          ),
+        if (_speechToTextEnabled)
+          SizedBox(height: 16), // Add spacing between buttons
+        if (_speechToTextEnabled)
+          FloatingActionButton(
+            heroTag: "speechToTextButton",
+            onPressed: () {
+              _handleSpeechToText(context);
+            },
+            tooltip: 'Speech-to-Text Action',
+            child: Icon(Icons.mic),
+          ),
+      ],
+    ),*/
     );
   }
 
@@ -270,11 +326,34 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           );
         }
-        
       },
     );
   }
 
+  /*
+  // Text-to-speech
+  void _handleTextToSpeech(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Text-to-Speech Action'),
+          content: Text('You have activated the Text-to-Speech feature!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  */
+
+  /*
   // Text-to-speech
   void _handleTextToSpeech(BuildContext context) {
     showDialog(
@@ -309,7 +388,32 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
-  
+  */
+
+  /*
+  // Speech-to-text
+  void _handleSpeechToText(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Speech-to-Text Action'),
+          content: Text('You have activated the Speech-to-Text feature!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  */
+
+  /*
   // Speech-to-text
   void _handleSpeechToText(BuildContext context) {
     showDialog(
@@ -342,6 +446,7 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
+  */
 
   // Tag Settings
   void _showTagSettings(BuildContext context) {
@@ -420,3 +525,5 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
+final settings = _SettingsPageState();

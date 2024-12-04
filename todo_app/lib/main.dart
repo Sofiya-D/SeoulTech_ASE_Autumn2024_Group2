@@ -64,6 +64,16 @@ class ThemeProvider extends ChangeNotifier {
 
 class MyAppState extends ChangeNotifier {
     // var taskList = <Todo>[];
+  
+  // Floating button visibility state
+  bool _isFloatingButtonEnabled = false;
+
+  bool get isFloatingButtonEnabled => _isFloatingButtonEnabled;
+
+  void toggleFloatingButton(bool value) {
+    _isFloatingButtonEnabled = value;
+    notifyListeners();
+  }
 
   // !! SHOULD BE REMOVED !!
   // !! HERE FOR TESTING PURPOSES ONLY !!
@@ -622,18 +632,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var taskList = appState.taskList;
+
     Widget page;
     switch (selectedIndex) {
       case 0:
         // page = CreateTaskPage();
         page = TodoFormView(
-        onSubmit: (Todo todo) {
-          // debug
-          print('Nouvelle tâche créée : ${todo.title}');
-          taskList.add(todo);
-          setState(() {
-                    selectedIndex = 1;
-                  });
+          onSubmit: (Todo todo) {
+            // debug
+            print('Nouvelle tâche créée : ${todo.title}');
+            taskList.add(todo);
+            setState(() {
+              selectedIndex = 1;
+            });
           },
         );
         break;
@@ -737,6 +748,25 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Theme.of(context).colorScheme.primaryContainer,
         child: page,
       ),
+      floatingActionButton: appState.isFloatingButtonEnabled
+          ? FloatingActionButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    content: Text("Button clicked!"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("Close"),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

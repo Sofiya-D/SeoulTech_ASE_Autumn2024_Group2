@@ -3,6 +3,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:intl/intl.dart';
 
+import 'floating_buttons.dart';
+import 'settings_manager.dart';
+
 class CalendarPage extends StatefulWidget {
   final List<Todo> taskList;
 
@@ -248,6 +251,26 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
           const SizedBox(height: 8.0),
           _buildTaskList(),
         ],
+      ),
+      /*floatingActionButton: FloatingButtons(
+        textToSpeechEnabled: textToSpeechEnabled,
+        speechToTextEnabled: speechToTextEnabled,
+        onTextToSpeechPressed: () {
+          // Define Text-to-Speech action here
+          print("Text-to-Speech button pressed");
+        },
+        onSpeechToTextPressed: () {
+          // Define Speech-to-Text action here
+          print("Speech-to-Text button pressed");
+        },
+      ),*/
+      floatingActionButton: FloatingButtons(
+        onTextToSpeechPressed: () {
+          settingsManager.handleTextToSpeech(context);
+        },
+        onSpeechToTextPressed: () {
+          settingsManager.handleSpeechToText(context);
+        },
       ),
     );
   }

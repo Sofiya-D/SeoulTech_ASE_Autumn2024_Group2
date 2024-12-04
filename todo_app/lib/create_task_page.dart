@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 
+import 'settings_manager.dart';
+import 'floating_buttons.dart';
+
+
 class CreateTaskPage extends StatelessWidget {
   const CreateTaskPage({
     super.key,
@@ -13,6 +17,14 @@ class CreateTaskPage extends StatelessWidget {
         children: [
           Text('This is the Create Task Page'),
         ],
+      ),
+      floatingActionButton: FloatingButtons(
+        onTextToSpeechPressed: () {
+          settingsManager.handleTextToSpeech(context);
+        },
+        onSpeechToTextPressed: () {
+          settingsManager.handleSpeechToText(context);
+        },
       ),
     );
   }
