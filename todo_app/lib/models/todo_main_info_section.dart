@@ -23,12 +23,12 @@ class TodoMainInfoSection extends StatelessWidget {
             TextFormField(
               controller: formData.title,
               decoration: const InputDecoration(
-                labelText: 'Titre *',
+                labelText: 'Title *',
                 border: OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Veuillez entrer un titre';
+                  return 'Please enter a title';
                 }
                 return null;
               },
@@ -48,7 +48,7 @@ class TodoMainInfoSection extends StatelessWidget {
             TextFormField(
               controller: formData.tags,
               decoration: const InputDecoration(
-                labelText: 'Tags (séparés par des virgules)',
+                labelText: 'Tags (comma-separated)',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -76,7 +76,7 @@ class _ImportanceLevelSliderState extends State<ImportanceLevelSlider> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text('Niveau d\'importance: '),
+        const Text('Importance Level: '),
         Expanded(
           child: Slider(
             value: widget.formData.importanceLevel.toDouble(),

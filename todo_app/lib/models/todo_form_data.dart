@@ -52,7 +52,7 @@ class TodoFormData {
 
     if (startDateTime != null && dueDateTime != null) {
       if (dueDateTime!.isBefore(startDateTime!)) {
-        dateError = 'La date et l\'heure de fin doivent être après la date et l\'heure de début';
+        dateError = 'End date and time must be after start date and time';
         return false;
       }
     }
@@ -122,7 +122,7 @@ class SubtaskFormData {
 
     if (startDateTime != null && dueDateTime != null) {
       if (dueDateTime!.isBefore(startDateTime!)) {
-        dateError = 'La date et l\'heure de fin doivent être après la date et l\'heure de début';
+        dateError = 'End date and time must be after start date and time';
         return false;
       }
     }

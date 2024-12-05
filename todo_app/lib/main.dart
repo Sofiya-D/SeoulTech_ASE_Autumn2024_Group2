@@ -54,7 +54,7 @@ class MyAppState extends ChangeNotifier {
   void addTask(Todo todo) {
     taskList.add(todo);
     // Schedule notifications for the new task
-    _notificationService.testNotificationImmediately(todo);
+    //_notificationService.testNotificationImmediately(todo);
     todo.scheduleNotifications(_notificationService);
     _notificationService.checkPendingNotificationRequests();
     notifyListeners();

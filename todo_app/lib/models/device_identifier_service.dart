@@ -42,7 +42,7 @@ class DeviceIdentifierService {
   }
 
   String _generateAndroidId(AndroidDeviceInfo info) {
-    // Combinaison de plusieurs identifiants uniques
+    // Combination of several unique identifiers
     return info.id + 
            // info.androidId + 
            info.model + 
@@ -50,7 +50,7 @@ class DeviceIdentifierService {
   }
 
   String _generateIosId(IosDeviceInfo info) {
-    // Utilisation de l'identifiant unique d'Apple
+    // Using Apple's unique identifier
     return info.identifierForVendor ?? 
            (info.name + info.systemVersion + info.model);
   }
@@ -73,41 +73,40 @@ class DeviceIdentifierService {
   }
 
   Future<String> _generateFallbackId() async {
-    // Méthode de secours utilisant un package comme uuid
-    // Ou générer un ID unique stocké localement
-    // Exemple simplifié :
+    // Fallback method using uuid package
+    // or generate simplified example :
     return DateTime.now().millisecondsSinceEpoch.toString() + 
            Random().nextInt(10000).toString();
   }
 
-  // Méthode pour stocker l'ID de manière persistante
+  // Method to store ID persistently
   Future<void> persistDeviceId(String deviceId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('unique_device_id', deviceId);
   }
 
-  // Méthode pour récupérer l'ID persistant
+  // Method to retrieve persistent ID
   Future<String?> getPersistedDeviceId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('unique_device_id');
   }
 }
 
-// Utilisation dans votre application
+// usage in your app
 class DeviceIdentifierManager {
   static Future<String> getDeviceIdentifier() async {
     DeviceIdentifierService deviceIdentifierService = DeviceIdentifierService();
     
-    // Essayer de récupérer un ID persistant d'abord
+    // first try to get the stored ID
     String? persistedId = await deviceIdentifierService.getPersistedDeviceId();
     if (persistedId != null) {
       return persistedId;
     }
 
-    // Générer un nouvel ID unique
+    // generate new ID
     String uniqueDeviceId = await deviceIdentifierService.getUniqueDeviceId();
     
-    // Stocker l'ID pour une utilisation future
+    // store ID for future usage
     await deviceIdentifierService.persistDeviceId(uniqueDeviceId);
     
     return uniqueDeviceId;

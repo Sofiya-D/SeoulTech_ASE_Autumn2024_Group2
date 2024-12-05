@@ -58,14 +58,14 @@ class _FolderManagerState extends State<FolderManager> {
       if (result.type != ResultType.done) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Impossible d\'ouvrir: ${result.message}')),
+            SnackBar(content: Text('Unable to open: ${result.message}')),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors de l\'ouverture: $e')),
+          SnackBar(content: Text('Error opening: $e')),
         );
       }
     }
@@ -90,12 +90,12 @@ class _FolderManagerState extends State<FolderManager> {
             ElevatedButton.icon(
               onPressed: _pickFile,
               icon: const Icon(Icons.file_present),
-              label: const Text('Ajouter fichier'),
+              label: const Text('Add File'),
             ),
             ElevatedButton.icon(
               onPressed: _pickFolder,
               icon: const Icon(Icons.folder),
-              label: const Text('Ajouter dossier'),
+              label: const Text('Add Folder'),
             ),
           ],
         ),

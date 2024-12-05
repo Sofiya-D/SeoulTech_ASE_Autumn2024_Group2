@@ -51,17 +51,15 @@ class NotificationService {
   List<List<dynamic>> vagueConfig = [
     // Format : [jour avant échéance, heure de notification]
     [14, TimeOfDay(hour: 10, minute: 0)],
-    //[7, TimeOfDay(hour: 15, minute: 30)],
-    //[3, TimeOfDay(hour: 20, minute: 0)],
-    //[0, TimeOfDay(hour: 19, minute: 50)], //test
+    [7, TimeOfDay(hour: 15, minute: 30)],
+    [3, TimeOfDay(hour: 20, minute: 0)],
   ];
 
   List<List<dynamic>> nonVagueConfig = [
     // Format : [jour avant échéance, heure de notification]
     [30, TimeOfDay(hour: 9, minute: 0)],
-    //[15, TimeOfDay(hour: 14, minute: 0)],
-    //[1, TimeOfDay(hour: 18, minute: 0)],
-    //[0, TimeOfDay(hour: 19, minute: 50)], //test
+    [15, TimeOfDay(hour: 14, minute: 0)],
+    [1, TimeOfDay(hour: 18, minute: 0)],
   ];
 
   Future<void> init() async {
@@ -71,11 +69,11 @@ class NotificationService {
     // Initialize time zones
     tz.initializeTimeZones();
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(currentTimeZone));//));'Europe/Paris'currentTimeZone
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
     // Android notification details
     const AndroidInitializationSettings initializationSettingsAndroid = 
-        AndroidInitializationSettings('@android:drawable/ic_dialog_info');//'app_icon');
+        AndroidInitializationSettings('@android:drawable/ic_dialog_info');
     
     // iOS notification details
     const DarwinInitializationSettings initializationSettingsIOS = 
@@ -105,14 +103,16 @@ class NotificationService {
       print('Notification permissions not granted');
       // Gérer le cas où les permissions sont refusées
       // Peut-être afficher un dialogue à l'utilisateur
+
     }
 
     if (!exactAlarmPermissionGranted) {
       print('Exact alarm permissions not granted');
       // Basculer sur des alarmes inexactes ou gérer différemment
+      _currentAlarmType = AlarmType.inexact;
     }
 
-    print('NotificationService initialisé');
+    print('NotificationService initialized');
     print('Exact Alarm Permission: $exactAlarmPermissionGranted');
     print('Notification Permission: $notificationPermissionGranted');
   }
@@ -166,14 +166,14 @@ class NotificationService {
     }
     
     if (Platform.isAndroid) {
-      // Pour Android 13+, utiliser permission_handler
+      // for Android 13+, use permission_handler
       final deviceInfo = await DeviceInfoPlugin().androidInfo;
       if (deviceInfo.version.sdkInt >= 33) {
         final status = await Permission.notification.request();
         return status.isGranted;
       }
       
-      // Pour les versions Android antérieures à 13
+      // for android version before 13
       final androidImplementation = 
         flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
@@ -190,17 +190,16 @@ class NotificationService {
   int _generateUniqueNotificationId(Todo todo) {
     //return (todo.hashCode + DateTime.now().millisecondsSinceEpoch + 
     //       Random().nextInt(10000)).toInt();
-    return Random().nextInt(10000).toInt();///(todo.hashCode ^ DateTime.now().millisecondsSinceEpoch) & 0x7FFFFFFF;
+    return Random().nextInt(100000).toInt();///(todo.hashCode ^ DateTime.now().millisecondsSinceEpoch) & 0x7FFFFFFF;
   }
 
   // Méthode principale pour planifier les notifications d'une tâche
   Future<void> scheduleTodoNotifications({
     required Todo todo,
   }) async {
-    // Toujours utiliser la date de fin comme référence
     if (todo.dueDate == null) return;
 
-    // Choisir la configuration
+    // choose configuration
     List<List<dynamic>> config = todo.startDate != null 
         ? vagueConfig 
         : nonVagueConfig;
@@ -217,20 +216,20 @@ class NotificationService {
       DateTime referenceDate = todo.dueDate!;
       DateTime potentialNotificationDate = referenceDate.copyWith(
         //to test notifications :
-        hour: DateTime.now().hour,//notificationTime.hour,
-        minute: DateTime.now().minute +2//notificationTime.minute
+        hour: notificationTime.hour, //hour: DateTime.now().hour,
+        minute: notificationTime.minute, //minute: DateTime.now().minute +2
       );
+
       debugPrint("preparing notification with time : ${potentialNotificationDate}, while DateTime.now() is ${DateTime.now()} and due date is ${todo.dueDate}.");
       debugPrint("notification verification output status : ${potentialNotificationDate.isAfter(DateTime.now()) && 
           potentialNotificationDate.isBefore(todo.dueDate!)}");
-      // Vérifier que la notification est dans la plage valide
+      // verify notification date limits
       if (potentialNotificationDate.isAfter(DateTime.now()) && 
           potentialNotificationDate.isBefore(todo.dueDate!)) {
         debugPrint("notification date passed basic border verifications");
-        // Générer un identifiant unique
+        // generate unique id
         int notificationId = _generateUniqueNotificationId(todo);
 
-        // Créer la notification
         await _createNotification(
           todo: todo, 
           scheduledDate: potentialNotificationDate, 
@@ -257,60 +256,60 @@ class NotificationService {
       priority: Priority.high,
       //allowWhileIdle: true,
       //showWhen: true,
-      //enableVibration: true,
-      //playSound: true,
+      enableVibration: true,
+      playSound: true,
     );
 
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
     );
 
-    // Préparer le titre et le corps de la notification
-    String title = "Tâche à venir : ${todo.title}";
+    // title and body of notification
+    String title = "Upcoming Task : ${todo.title}";
     
     String body = todo.startDate != null
-        ? "Rappel pour la tâche vague \"${todo.title}\". " 
-          "À terminer pour le ${dateFormatter.format(dueDate)}"
-        : "Rappel important pour la tâche \"${todo.title}\". " 
-          "Date limite : ${dateFormatter.format(dueDate)}";
+        ? "Reminder for the vague task \"${todo.title}\". " 
+          "To be completed by ${dateFormatter.format(dueDate)}"
+        : "Important task reminder \"${todo.title}\". " 
+          "Due date : ${dateFormatter.format(dueDate)}";
 
     try {
-      print('Tentative de planification de notification:');
+      print('Notification plannification attempt:');
       print('ID: $notificationId');
-      print('Date schedulée: $scheduledDate');
-      print('Heure actuelle: ${DateTime.now()}');
-      print('Timezone local: ${tz.local}');
+      print('Scheduled date: $scheduledDate');
+      print('Current Date: ${DateTime.now()}');
+      print('Local Timezone: ${tz.local}');
 
       // Conversion explicite en TZDateTime
       final tzScheduledDate = tz.TZDateTime.from(scheduledDate, tz.local);
       
       // Vérification supplémentaire
       if (tzScheduledDate.isBefore(tz.TZDateTime.now(tz.local))) {
-        print('ATTENTION: Date de notification dans le passé!');
+        print('WARNING: notification date in the past!');
         return;
       }
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId, 
-        "Tâche à venir : ${todo.title}",
-        "À terminer pour le ${dateFormatter.format(dueDate)}",
+        title,
+        body,
         tzScheduledDate,//tz.TZDateTime.now(tz.local).add(const Duration(seconds: 1)),
         platformChannelSpecifics,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: _currentAlarmType==AlarmType.exact ? AndroidScheduleMode.exactAllowWhileIdle : AndroidScheduleMode.inexactAllowWhileIdle,
         uiLocalNotificationDateInterpretation: 
             UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time, // Nouveau paramètre
+        matchDateTimeComponents: DateTimeComponents.time,
       );
 
-      print('Notification planifiée avec succès');
+      print('Notification succesfully planned');
       
     } catch (e) {
-      print('Erreur complète lors de la planification de la notification : $e');
+      print('Complete error while trying to plan notification : $e');
       print('Stacktrace: ${StackTrace.current}');
       _currentAlarmType = AlarmType.inexact;
     }
 
-    // Ajouter la notification à la liste des notifications de la tâche
+    // add notification to notification list of task
     todo.addNotification(
       NotificationInfo(
         deviceId: await _getDeviceId(), 
@@ -320,17 +319,21 @@ class NotificationService {
   }
 
   Future<String> _getDeviceId() async {
-    // Implémentation de DeviceIdentifierManager
     return DeviceIdentifierManager.getDeviceIdentifier();
   }
 
-  // Annuler toutes les notifications pour une tâche
   Future<void> cancelTodoNotifications(Todo todo) async {
     for (var notificationInfo in todo.notificationIds) {
-      await flutterLocalNotificationsPlugin.cancel(notificationInfo.notificationId);
+      if (notificationInfo.deviceId == _getDeviceId()) {
+        await flutterLocalNotificationsPlugin.cancel(notificationInfo.notificationId);
+      }
     }
-    // Vider la liste des identifiants de notifications
-    todo.notificationIds.clear();
+
+    for (var notificationInfo in todo.notificationIds) {
+      if (notificationInfo.deviceId == _getDeviceId()) {
+        todo.notificationIds.clear();
+      }
+    }
   }
 
   Future<void> cancelAllNotifications() async {
@@ -338,7 +341,7 @@ class NotificationService {
   }
 
   Future<void> testNotificationImmediately(Todo todo) async {
-    print('Test notification immédiate');
+    print('immediate notfication test');
     
     const AndroidNotificationDetails androidPlatformChannelSpecifics = 
         AndroidNotificationDetails(
@@ -355,10 +358,11 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.show(
       Random().nextInt(100000), 
       'Test Notification', 
-      'Ceci est une notification de test', 
+      'This is a test notification', 
       platformChannelSpecifics
     );
   }
+
   Future<void> checkPendingNotificationRequests() async {
     final List<PendingNotificationRequest> pendingNotificationRequests =
         await flutterLocalNotificationsPlugin.pendingNotificationRequests();
@@ -375,7 +379,7 @@ class NotificationService {
 }
 
 
-// Extension pour faciliter la copie avec modification d'un DateTime
+
 extension DateTimeExtension on DateTime {
   DateTime copyWith({
     int? year,
