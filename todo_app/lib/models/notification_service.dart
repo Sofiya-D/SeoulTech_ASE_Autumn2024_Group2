@@ -340,6 +340,14 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
 
+  Future<void> resetAllDeviceNotifications(List<Todo> tasks) async {
+    cancelAllNotifications();
+    for (var task in tasks) {
+      cancelTodoNotifications(task);
+      task.scheduleNotifications(this);
+    }
+  }
+
   Future<void> testNotificationImmediately(Todo todo) async {
     print('immediate notfication test');
     

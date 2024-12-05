@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:todo_app/models/notification_service.dart';
+import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
 import 'package:todo_app/models/database_manager.dart'; // to manage the tasks database
@@ -37,6 +39,7 @@ void main() async {
   // !! /TEMPORARY !!
 
   final tasks = await DatabaseManager.instance.getAllTasks(); // Retrieve tasks from SQLite.
+  notificationService.resetAllDeviceNotifications(tasks);
 
   runApp(MyApp(tasks: tasks, notificationService: notificationService)); // Pass tasks to MyApp
 }
@@ -75,6 +78,7 @@ class MyAppState extends ChangeNotifier {
 
   void addTask(Todo todo) {
     taskList.add(todo);
+    DatabaseManager.instance.insertTask(todo);
     // Schedule notifications for the new task
     //_notificationService.testNotificationImmediately(todo);
     todo.scheduleNotifications(_notificationService);
@@ -84,8 +88,20 @@ class MyAppState extends ChangeNotifier {
 
   void removeTask(Todo todo) {
     // Cancel existing notifications for the task
+    todo.isDeleted == true;
     _notificationService.cancelTodoNotifications(todo);
     taskList.remove(todo);
+    notifyListeners();
+  }
+
+  void completeTask(Todo todo) {
+    todo.isCompleted == true;
+    DatabaseManager.instance.updateTask(todo);
+    _notificationService.cancelTodoNotifications(todo);
+    if (todo.periodicity != null && todo.periodicity!.isNull()) {
+      Todo new_todo = todo.duplicateWith(dueDate: todo.periodicity!.calculateNextOccurrence(todo.dueDate!));
+    }
+    addTask(todo);
     notifyListeners();
   }
 }

@@ -30,6 +30,10 @@ class Periodicity {
     return nextDate;
   }
 
+  bool isNull() {
+    return (days + months + years == 0);
+  }
+
   /// Deserialization from json, to allow fetching data from the SQLite Database
   factory Periodicity.fromJson(String json) {
     final Map<String, dynamic> data = jsonDecode(json);

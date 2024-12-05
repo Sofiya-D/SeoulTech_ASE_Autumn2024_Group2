@@ -5,6 +5,7 @@ import 'package:todo_app/models/notification_service.dart';
 
 
 class Todo {
+  int? id;
   String title;
   String description;
   int importanceLevel;
@@ -24,6 +25,7 @@ class Todo {
   List<NotificationInfo> notificationIds = [];
 
   Todo({
+    this.id,
     required this.title,
     this.description = '',
     this.importanceLevel = 1,
@@ -42,20 +44,15 @@ class Todo {
   });
 
   Future<void> scheduleNotifications(NotificationService notificationService) async {
-    // Planifier les notifications pour la date de début
-    if (startDate != null) {
+    if (dueDate != null && isCompleted != false && isDeleted != false) {
       await notificationService.scheduleTodoNotifications(
         todo: this,
       );
     }
-
-    // Planifier les notifications pour la date d'échéance
-    if (dueDate != null) {
-      await notificationService.scheduleTodoNotifications(
-        todo: this, 
-      );
-    }
   }
+
+
+
   /// Convert to Map for SQLite.
   Map<String, dynamic> toMap() {
     return {
@@ -80,6 +77,7 @@ class Todo {
   /// Convert from Map to use SQLite Database.
   factory Todo.fromMap(Map<String, dynamic> map) {
     return Todo(
+      id: map['id'], //to verify
       title: map['title'],
       description: map['description'],
       importanceLevel: map['importanceLevel'],
@@ -106,6 +104,7 @@ class Todo {
 }
 
 class TodoTask {
+  int? id;
   String title;
   String description;
 
@@ -123,6 +122,7 @@ class TodoTask {
   String? parentId; // to link the subtask to its parent
 
   TodoTask({
+    this.id,
     required this.title,
     this.description = '',
     this.tags = const [],
@@ -140,6 +140,7 @@ class TodoTask {
   /// Convert to Map for SQLite.
   Map<String, dynamic> toMap() {
     final map = {
+      //'id': id,
       'title': title,
       'description': description,
       'tags': tags.join(','), // Convert list to a comma-separated string.
@@ -161,5 +162,156 @@ class TodoTask {
     }
 
     return map;
+  }
+}
+
+
+extension TodoCopyWith on Todo {
+  Todo copyWith({
+    int? id,
+    String? title,
+    String? description,
+    int? importanceLevel,
+    List<String>? tags,
+    DateTime? startDate,
+    DateTime? dueDate,
+    Periodicity? periodicity,
+    bool? isDeleted,
+    bool? isCompleted,
+    bool? isMissed,
+    List<TodoTask>? tasks,
+    List<String>? folders,
+    List<String>? links,
+    int? points,
+    Color? taskColor,
+    List<NotificationInfo>? notificationIds,
+  }) {
+    return Todo(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      importanceLevel: importanceLevel ?? this.importanceLevel,
+      tags: tags ?? this.tags,
+      startDate: startDate ?? this.startDate,
+      dueDate: dueDate ?? this.dueDate,
+      periodicity: periodicity ?? this.periodicity,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isMissed: isMissed ?? this.isMissed,
+      tasks: tasks ?? this.tasks,
+      folders: folders ?? this.folders,
+      links: links ?? this.links,
+      points: points ?? this.points,
+      taskColor: taskColor ?? this.taskColor,
+    )..notificationIds = notificationIds ?? this.notificationIds;
+  }
+}
+
+extension TodoTaskCopyWith on TodoTask {
+  TodoTask copyWith({
+    int? id,
+    String? title,
+    String? description,
+    List<String>? tags,
+    DateTime? startDate,
+    DateTime? dueDate,
+    Periodicity? periodicity,
+    bool? isDeleted,
+    bool? isCompleted,
+    bool? isMissed,
+    List<String>? folders,
+    List<String>? links,
+    int? points,
+    String? parentId,
+  }) {
+    return TodoTask(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      tags: tags ?? this.tags,
+      startDate: startDate ?? this.startDate,
+      dueDate: dueDate ?? this.dueDate,
+      periodicity: periodicity ?? this.periodicity,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isMissed: isMissed ?? this.isMissed,
+      folders: folders ?? this.folders,
+      links: links ?? this.links,
+      points: points ?? this.points,
+    )..parentId = parentId ?? this.parentId;
+  }
+}
+
+extension TodoDuplicateWith on Todo {
+  Todo duplicateWith({
+    int? id,
+    String? title,
+    String? description,
+    int? importanceLevel,
+    List<String>? tags,
+    DateTime? startDate,
+    DateTime? dueDate,
+    Periodicity? periodicity,
+    bool? isDeleted,
+    bool? isCompleted,
+    bool? isMissed,
+    List<TodoTask>? tasks,
+    List<String>? folders,
+    List<String>? links,
+    int? points,
+    Color? taskColor,
+  }) {
+    return Todo(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      importanceLevel: importanceLevel ?? this.importanceLevel,
+      tags: tags ?? List<String>.from(this.tags),
+      startDate: startDate ?? this.startDate,
+      dueDate: dueDate ?? this.dueDate,
+      periodicity: periodicity ?? this.periodicity,
+      isDeleted: isDeleted ?? false, // Reset deletion status
+      isCompleted: isCompleted ?? false, // Reset completion status
+      isMissed: isMissed ?? false, // Reset missed status
+      tasks: tasks ?? this.tasks.map((task) => task.duplicateWith()).toList(),
+      folders: folders ?? List<String>.from(this.folders),
+      links: links ?? List<String>.from(this.links),
+      points: points ?? this.points,//0, // Reset points
+      taskColor: taskColor ?? this.taskColor,
+    );
+  }
+}
+
+extension TodoTaskDuplicateWith on TodoTask {
+  TodoTask duplicateWith({
+    int? id,
+    String? title,
+    String? description,
+    List<String>? tags,
+    DateTime? startDate,
+    DateTime? dueDate,
+    Periodicity? periodicity,
+    bool? isDeleted,
+    bool? isCompleted,
+    bool? isMissed,
+    List<String>? folders,
+    List<String>? links,
+    int? points,
+  }) {
+    return TodoTask(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      tags: tags ?? List<String>.from(this.tags),
+      startDate: startDate ?? this.startDate,
+      dueDate: dueDate ?? this.dueDate,
+      periodicity: periodicity ?? this.periodicity,
+      isDeleted: isDeleted ?? false, // Reset deletion status
+      isCompleted: isCompleted ?? false, // Reset completion status
+      isMissed: isMissed ?? false, // Reset missed status
+      folders: folders ?? List<String>.from(this.folders),
+      links: links ?? List<String>.from(this.links),
+      points: points ?? this.points//0, // Reset points
+    );
   }
 }
