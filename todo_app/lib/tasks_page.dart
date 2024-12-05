@@ -8,6 +8,7 @@ import 'package:todo_app/models/todo.dart'; // Import the file where `Todo` is d
 /// !TODO! add filter (case: page "today" is a subset of "due-date")
 
 class TasksPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();

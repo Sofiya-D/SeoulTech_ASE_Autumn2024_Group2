@@ -33,16 +33,18 @@ dependencies:
 
   provider: ^6.0.0
   table_calendar: ^3.0.9
-  #text_to_speech: ^0.2.3
+  # text_to_speech: ^0.2.3
 
   # for date to string custom formatting
   intl: ^0.19.0
 
+  # for databese management
+  sqflite: ^2.4.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  #intl: ^0.20.0
+
   url_launcher: ^6.1.10
   file_picker: ^5.3.1
   open_file: ^3.3.2
