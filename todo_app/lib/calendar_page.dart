@@ -282,10 +282,12 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildLegendButton('Show all tasks', null, Colors.grey),
-          _buildLegendButton('Importance level 1', 1, Colors.blue),
-          _buildLegendButton('Importance level 2', 2, Colors.orange),
-          _buildLegendButton('Importance level 3', 3, Colors.red),
+          _buildLegendButton('All tasks', null, Colors.grey),
+          _buildLegendButton('Unimportant', 1, const Color.fromARGB(255, 155, 151, 255)),
+          _buildLegendButton('Less important', 2, Colors.blue),
+          _buildLegendButton('Important', 3, const Color.fromARGB(255, 255, 221, 0)),
+          _buildLegendButton('Urgent', 4, Colors.orange),
+          _buildLegendButton('Very Urgent', 5, Colors.red),
           Row(
             children: [
               Checkbox(
@@ -369,10 +371,14 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
     if (todo.isCompleted) return Colors.green;
     switch (todo.importanceLevel) {
       case 1:
-        return Colors.blue;
+        return const Color.fromARGB(255, 155, 151, 255);
       case 2:
-        return Colors.orange;
+        return Colors.blue;
       case 3:
+        return const Color.fromARGB(255, 255, 221, 0);
+      case 4:
+        return Colors.orange;
+      case 5:
         return Colors.red;
       default:
         return Colors.grey;

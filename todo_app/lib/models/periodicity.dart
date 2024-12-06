@@ -37,9 +37,4 @@ class Periodicity {
     
     return nextDate;
   }
-  
-  Duration toDuration() {
-    return Duration(days: days);
-  }
-
 }
