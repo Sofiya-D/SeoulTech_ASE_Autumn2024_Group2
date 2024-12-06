@@ -7,7 +7,7 @@ List<Todo> sortTasks(List<Todo> tasks, String sortBy) {
         return (a.dueDate ?? DateTime(9999)).compareTo(b.dueDate ?? DateTime(9999));
       case 'priority':
         return b.importanceLevel.compareTo(a.importanceLevel); // Higher priority first
-      case 'title':
+      case 'Title':
         return a.title.toLowerCase().compareTo(b.title.toLowerCase());
       default:
         return 0; // No sorting

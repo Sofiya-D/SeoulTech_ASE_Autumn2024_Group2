@@ -13,7 +13,7 @@ import 'tasks_page.dart';
 // import 'create_task_page.dart';
 import 'settings_page.dart';
 
-// import 'package:todo_app/test_data/example_tasks.dart';
+import 'package:todo_app/test_data/example_tasks.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ void main() async {
   }
 
   // !! TEMPORARY !! - for dev/debug purposes
-  // await DatabaseManager.instance.setAllTasks(exampleTasks); // Sets the Database to the example_tasks set of tasks
+  await DatabaseManager.instance.setAllTasks(exampleTasks); // Sets the Database to the example_tasks set of tasks
   // await DatabaseManager.instance.delete(); // !! caution !! Deletes any previously present database
   // await DatabaseManager.instance.insertMultipleTasks(exampleTasks); // Inserts the example_tasks set of tasks into the database
   // !! /TEMPORARY !!

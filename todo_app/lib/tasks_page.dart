@@ -65,13 +65,16 @@ class TasksPageState extends State<TasksPage> {
             ),
           ],
         ),
-        ListView(
-          children: [
-            for (var task in sortedTasks)
-              _TaskListCard(
-                task: task,
-              ),
-          ],
+        Expanded(
+          child: ListView(
+            children: [
+              for (var task in sortedTasks)
+                _TaskListCard(
+                  task: task,
+                  selectedSort: selectedSort,
+                ),
+            ],
+          ),
         ),
       ],
     );
@@ -81,9 +84,11 @@ class TasksPageState extends State<TasksPage> {
 class _TaskListCard extends StatefulWidget {
   const _TaskListCard({
     required this.task,
+    required this.selectedSort,
   });
 
   final Todo task;
+  final String selectedSort;
 
   @override
   _TaskListCardState createState() => _TaskListCardState();
@@ -113,6 +118,7 @@ class _TaskListCardState extends State<_TaskListCard> {
                   _isExpanded = !_isExpanded;
                 });
               },
+              selectedSort: ,
             ),
             // SECOND SECTION
             TaskCardSecondSection(
@@ -138,11 +144,13 @@ class TaskCardFirstSection extends StatelessWidget {
     required this.task,
     required this.isExpanded,
     required this.onExpandToggle,
+    required this.selectedSort,
   });
 
   final Todo task;
   final bool isExpanded;
   final VoidCallback onExpandToggle;
+  final String selectedSort;
 
   @override
   Widget build(BuildContext context) {
@@ -151,10 +159,9 @@ class TaskCardFirstSection extends StatelessWidget {
       color: theme.colorScheme.onPrimary,
     );
 
-    var sortBy = "date";
     String? label;
-    switch (sortBy) {
-      case "date":
+    switch (selectedSort) {
+      case "dueDate":
         label = task.dueDate != null
             ? DateFormat('MMM d').format(task.dueDate!)
             : "ND";
@@ -167,6 +174,9 @@ class TaskCardFirstSection extends StatelessWidget {
         label.length >= 5 ? label.substring(0, 5) : label;
         break;
       case "cemetery":
+        label = null;
+        break;
+      case "title":
         label = null;
         break;
       default:
