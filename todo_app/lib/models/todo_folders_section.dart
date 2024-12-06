@@ -24,7 +24,7 @@ class _TodoFoldersSectionState extends State<TodoFoldersSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Fichiers et Dossiers',
+              'Files and Folders',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

@@ -67,7 +67,7 @@ class _TodoFormViewState extends State<TodoFormView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nouvelle Tâche'),
+        title: const Text('New Task'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -91,7 +91,7 @@ class _TodoFormViewState extends State<TodoFormView> {
                   onPressed: _handleSubmit,
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    child: Text('Créer la tâche'),
+                    child: Text('Create Task'),
                   ),
                 ),
               ),

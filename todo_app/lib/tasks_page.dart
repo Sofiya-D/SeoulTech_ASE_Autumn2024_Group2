@@ -190,15 +190,42 @@ class TaskCardFirstSection extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          // height: !isExpanded ? 25 : null,
-          width: 270, // task title width limitation
+        // SizedBox(
+        //   // height: !isExpanded ? 25 : null,
+        //   width: 270, // task title width limitation
+        //   child: Container(
+        //     padding: EdgeInsets.symmetric(horizontal: 6),
+        //     child: Text(
+        //       task.title,
+        //       maxLines: !isExpanded ? 1 : 2, // Limit lines when collapsed
+        //       overflow: TextOverflow.ellipsis, // Add ellipsis if cropped
+        //       style: titleStyle,
+        //       semanticsLabel: task.title,
+        //     ),
+        //   ),
+        // ),
+        // Flexible(
+        //   child: Tooltip(
+        //     message: task.title,
+        //     child: Container(
+        //       padding: EdgeInsets.symmetric(horizontal: 6),
+        //       child: Text(
+        //         task.title,
+        //         maxLines: !isExpanded ? 1 : 2,
+        //         overflow: TextOverflow.ellipsis,
+        //         style: titleStyle,
+        //         semanticsLabel: task.title,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        Flexible(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: Text(
               task.title,
-              maxLines: !isExpanded ? 1 : 2, // Limit lines when collapsed
-              overflow: TextOverflow.ellipsis, // Add ellipsis if cropped
+              maxLines: !isExpanded ? 1 : null, // Changez null au lieu de 2 quand étendu
+              overflow: !isExpanded ? TextOverflow.ellipsis : TextOverflow.visible, // Ajustez le comportement de l'overflow
               style: titleStyle,
               semanticsLabel: task.title,
             ),

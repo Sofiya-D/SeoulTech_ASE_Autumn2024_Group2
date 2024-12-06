@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:todo_app/models/notification_service.dart';
+import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
 import 'package:todo_app/models/database_manager.dart'; // to manage the tasks database
@@ -14,6 +17,10 @@ import 'settings_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize the notification service
+  final notificationService = NotificationService();
+  await notificationService.init();
 
   final dbManager = DatabaseManager.instance;
   final dbExists = await dbManager.exists();
@@ -32,26 +39,30 @@ void main() async {
   // !! /TEMPORARY !!
 
   final tasks = await DatabaseManager.instance.getAllTasks(); // Retrieve tasks from SQLite.
+  notificationService.resetAllDeviceNotifications(tasks);
 
-  runApp(MyApp(tasks: tasks)); // Pass tasks to MyApp
+  runApp(MyApp(tasks: tasks, notificationService: notificationService)); // Pass tasks to MyApp
 }
 
 class MyApp extends StatelessWidget {
   final List<Todo> tasks;
 
-  const MyApp({super.key, required this.tasks});
+  final NotificationService notificationService;
+
+  const MyApp({super.key, required this.tasks, required this.notificationService});
+
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(tasks),
+      create: (context) => MyAppState(tasks, notificationService),
       child: MaterialApp(
         title: 'To-Do App',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         ),
-        home: MyHomePage(),
+        home: MyHomePage(notificationService: notificationService),
       ),
     );
   }
@@ -59,13 +70,47 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   List<Todo> taskList;
+  final NotificationService _notificationService;
 
-  MyAppState(this.taskList);  // Initialize taskList with fetched tasks
+  MyAppState(this.taskList, this._notificationService);  // Initialize taskList with fetched tasks
 
   // You can add methods here to modify taskList and notify listeners
+
+  void addTask(Todo todo) {
+    taskList.add(todo);
+    DatabaseManager.instance.insertTask(todo);
+    // Schedule notifications for the new task
+    //_notificationService.testNotificationImmediately(todo);
+    todo.scheduleNotifications(_notificationService);
+    _notificationService.checkPendingNotificationRequests();
+    notifyListeners();
+  }
+
+  void removeTask(Todo todo) {
+    // Cancel existing notifications for the task
+    todo.isDeleted == true;
+    _notificationService.cancelTodoNotifications(todo);
+    taskList.remove(todo);
+    notifyListeners();
+  }
+
+  void completeTask(Todo todo) {
+    todo.isCompleted == true;
+    DatabaseManager.instance.updateTask(todo);
+    _notificationService.cancelTodoNotifications(todo);
+    if (todo.periodicity != null && todo.periodicity!.isNull()) {
+      Todo new_todo = todo.duplicateWith(dueDate: todo.periodicity!.calculateNextOccurrence(todo.dueDate!));
+    }
+    addTask(todo);
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
+  final NotificationService notificationService;
+
+  const MyHomePage({super.key, required this.notificationService});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -76,19 +121,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var taskList = appState.taskList;
     Widget page;
+
+
     switch (selectedIndex) {
       case 0:
         // page = CreateTaskPage();
         page = TodoFormView(
-          onSubmit: (Todo todo) {
-            // debug
-            print('Nouvelle tâche créée : ${todo.title}');
-            taskList.add(todo);
-            setState(() {
-              selectedIndex = 1;
-            });
+        onSubmit: (Todo todo) {
+          appState.addTask(todo);
+          setState(() {
+                    selectedIndex = 1;
+                  });
           },
         );
         break;

@@ -106,14 +106,68 @@ class DatabaseManager {
     for (var task in tasks) {
       // Insert the main task.
       int taskId = await db.insert(tasksTable, task.toMap());
+      task.id = taskId;
       // Insert subtasks.
       for (var subtask in task.tasks) {
-        await db.insert(
+        subtask.id = await db.insert(
           subtasksTable,
           subtask.toMap()..['parentId'] = taskId, // Include the parent task ID.
         );
       }
     }
+  }
+
+  Future<void> insertTask(Todo task) async {
+    // Ensure 'db' points to our initialized database.
+    // will also create the database if needed
+    final db = await database;
+
+    // Insert the main task.
+    int taskId = await db.insert(tasksTable, task.toMap());
+    task.id = taskId;
+    // Insert subtasks.
+    for (var subtask in task.tasks) {
+      subtask.id = await db.insert(
+        subtasksTable,
+        subtask.toMap()..['parentId'] = taskId, // Include the parent task ID.
+      );
+    }
+  }
+
+  ///
+  /// Updates a task and its subtasks in the database
+  ///
+  /// [task] is the task to be updated
+  /// Replaces the existing entry if it exists, otherwise inserts it
+  ///
+  Future<void> updateTask(Todo task) async {
+    // Ensure 'db' points to our initialized database
+    final db = await database;
+
+    // Start a transaction to ensure data consistency
+    await db.transaction((txn) async {
+      // Update or insert the main task
+      task.id = await txn.insert(
+        tasksTable, 
+        task.toMap(), 
+        conflictAlgorithm: ConflictAlgorithm.replace
+      );
+
+      // Delete old subtasks linked to this task
+      await txn.delete(
+        subtasksTable, 
+        where: 'parentId = ?', 
+        whereArgs: [task.id]
+      );
+
+      // Insert new subtasks
+      for (var subtask in task.tasks) {
+        subtask.id = await txn.insert(
+          subtasksTable,
+          subtask.toMap()..['parentId'] = task.id, // Include parent task ID
+        );
+      }
+    });
   }
 
   ///

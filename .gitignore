@@ -25,3 +25,7 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+todo_app/macos/Flutter/GeneratedPluginRegistrant.swift
+todo_app/linux/flutter/generated_plugins.cmake
+todo_app/linux/flutter/generated_plugin_registrant.cc
+todo_app/windows/flutter/generated_plugin_registrant.cc
