@@ -101,6 +101,7 @@ class _TaskListCardState extends State<_TaskListCard> {
   Widget build(BuildContext context) {
     var task = widget.task; // Accessing task via widget.task
     var theme = Theme.of(context);
+    var selectedSort = widget.selectedSort;
 
     return Card(
       color: theme.colorScheme.secondary,
@@ -118,7 +119,7 @@ class _TaskListCardState extends State<_TaskListCard> {
                   _isExpanded = !_isExpanded;
                 });
               },
-              selectedSort: ,
+              selectedSort: selectedSort,
             ),
             // SECOND SECTION
             TaskCardSecondSection(
@@ -177,7 +178,9 @@ class TaskCardFirstSection extends StatelessWidget {
         label = null;
         break;
       case "title":
-        label = null;
+        label = task.dueDate != null
+            ? DateFormat('MMM d').format(task.dueDate!)
+            : "ND";
         break;
       default:
         throw UnimplementedError(
