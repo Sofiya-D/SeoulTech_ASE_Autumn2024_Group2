@@ -82,32 +82,37 @@ class TaskCardFirstSection extends StatelessWidget {
       color: theme.colorScheme.onPrimary,
     );
 
-    String? label;
-    switch (selectedSort) {
-      case "dueDate":
-        label = task.dueDate != null
+      String label = task.dueDate != null
             ? DateFormat('MMM d').format(task.dueDate!)
             : "ND";
-        break;
-      case "priority":
-        label = task.importanceLevel.toString();
-        break;
-      case "tag":
-        label = task.tags.isEmpty ? task.tags[0].toString() : "ND";
-        label.length >= 5 ? label.substring(0, 5) : label;
-        break;
-      case "cemetery":
-        label = null;
-        break;
-      case "title":
-        label = task.dueDate != null
-            ? DateFormat('MMM d').format(task.dueDate!)
-            : "ND";
-        break;
-      default:
-        throw UnimplementedError(
-            'Unhandled sorting parameter chosen for task viewing');
-    }
+
+    // String? label;
+    // switch (selectedSort) {
+    //   case "dueDate":
+    //     label = task.dueDate != null
+    //         ? DateFormat('MMM d').format(task.dueDate!)
+    //         : "ND";
+    //     break;
+    //   case "priority":
+    //     label = task.importanceLevel.toString();
+    //     break;
+    //   case "tag":
+    //     label = task.dueDate != null
+    //         ? DateFormat('MMM d').format(task.dueDate!)
+    //         : "ND";
+    //     break;
+    //   case "cemetery":
+    //     label = null;
+    //     break;
+    //   case "title":
+    //     label = task.dueDate != null
+    //         ? DateFormat('MMM d').format(task.dueDate!)
+    //         : "ND";
+    //     break;
+    //   default:
+    //     throw UnimplementedError(
+    //         'Unhandled sorting parameter chosen for task viewing');
+    // }
 
     return Row(
       children: [
@@ -127,7 +132,7 @@ class TaskCardFirstSection extends StatelessWidget {
         ),
         SizedBox(
           // height: !isExpanded ? 25 : null,
-          width: 240, // task title width limitation
+          width: 230, // task title width limitation
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: Text(
@@ -220,8 +225,10 @@ class TaskCardSecondSection extends StatelessWidget {
                         padding:
                             EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         child: Text(
-                          tag.length >= 6
-                              ? tag.substring(0, 6)
+                          isExpanded
+                          ? tag
+                          : tag.length >= 4
+                              ? tag.substring(0,4)
                               : tag, // show only the first 6 letters of the tag
                           style: isExpanded
                               ? theme.textTheme.bodyMedium!

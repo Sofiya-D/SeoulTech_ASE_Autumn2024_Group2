@@ -16,7 +16,7 @@ class TasksPage extends StatefulWidget {
 }
 
 class TasksPageState extends State<TasksPage> {
-  String selectedSort = 'priority'; // Default sorting criteria
+  String selectedSort = 'dueDate'; // Default sorting criteria
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +35,9 @@ class TasksPageState extends State<TasksPage> {
     // Sort tasks based on the selected criteria
     var sortedTasks = sortTasks(appState.taskList, selectedSort);
 
+    // Sort tasks based on the selected criteria
+    var groupedTasks = groupTasksByCriteria(sortedTasks, selectedSort);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -42,7 +45,7 @@ class TasksPageState extends State<TasksPage> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
+                padding: const EdgeInsets.only(right: 15.0),
                 child: Text(
                   'You have ${sortedTasks.length} tasks:',
                   style: titleStyle,
@@ -53,9 +56,11 @@ class TasksPageState extends State<TasksPage> {
                 value: selectedSort,
                 items: [
                   DropdownMenuItem(
+                      value: 'dueDate', child: Text('Sort by Due Date')),
+                  DropdownMenuItem(
                       value: 'priority', child: Text('Sort by Priority')),
                   DropdownMenuItem(
-                      value: 'dueDate', child: Text('Sort by Due Date')),
+                      value: 'tag', child: Text('Sort by Tag')),
                   DropdownMenuItem(
                       value: 'title', child: Text('Sort by Title')),
                 ],
@@ -69,7 +74,25 @@ class TasksPageState extends State<TasksPage> {
               ),
             ],
           ),
-          TaskListSection(taskSubList: sortedTasks, selectedSort: selectedSort)
+          // option 1
+          // TaskListSection(
+          //     sectionTitle: "Section 1",
+          //     taskSubList: sortedTasks,
+          //     selectedSort: selectedSort)
+          // end of option 1
+          // option 2
+          Expanded(
+            child: ListView(
+              children: groupedTasks.entries.map((entry) {
+                return TaskListSection(
+                  sectionTitle: entry.key,
+                  taskSubList: entry.value,
+                  selectedSort: selectedSort,
+                );
+              }).toList(),
+            ),
+          ),
+          // end of option 2
         ],
       ),
     );
@@ -78,10 +101,12 @@ class TasksPageState extends State<TasksPage> {
 
 class TaskListSection extends StatefulWidget {
   const TaskListSection({
+    required this.sectionTitle,
     required this.taskSubList,
     required this.selectedSort,
   });
 
+  final String sectionTitle;
   final List<Todo> taskSubList;
   final String selectedSort;
 
@@ -94,6 +119,7 @@ class TaskListSectionState extends State<TaskListSection> {
 
   @override
   Widget build(BuildContext context) {
+    var sectionTitle = widget.sectionTitle;
     var taskSubList = widget.taskSubList; // Accessing task via widget.task
     var theme = Theme.of(context);
     var selectedSort = widget.selectedSort;
@@ -102,17 +128,19 @@ class TaskListSectionState extends State<TaskListSection> {
       children: [
         Row(
           children: [
-            Text(
-              "hello",
-              style: theme.textTheme.titleMedium!.copyWith(
-                color: theme.colorScheme.onPrimary,
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Text(
+                sectionTitle,
+                style: theme.textTheme.titleMedium!.copyWith(
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
             ),
-            Spacer(), // to push the expand/collapse button to the right
             IconButton(
               icon: Icon(
                 _isExpanded ? Icons.expand_less : Icons.expand_more,
-                color: theme.colorScheme.onPrimary,
+                color: theme.colorScheme.onSurface,
               ),
               onPressed: () {
                 // Pass the toggle callback
