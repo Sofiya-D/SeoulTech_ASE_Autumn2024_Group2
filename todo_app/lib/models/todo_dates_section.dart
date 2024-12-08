@@ -164,7 +164,7 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
               children: [
                 Expanded(
                   child: _DateTimeTile(
-                    title: 'Date de début',
+                    title: 'Start Date',
                     dateTime: widget.formData.startDateTime,
                     onTap: _selectStartDateTime,
                     onClear: () => setState(() {
@@ -176,7 +176,7 @@ class _TodoDatesSectionState extends State<TodoDatesSection> {
                 ),
                 Expanded(
                   child: _DateTimeTile(
-                    title: 'Date de fin',
+                    title: 'Due Date',
                     dateTime: widget.formData.dueDateTime,
                     onTap: _selectDueDateTime,
                     onClear: () => setState(() {
@@ -263,7 +263,7 @@ class _DateTimeTile extends StatelessWidget {
       title: Text(title),
       subtitle: Text(
         dateTime == null 
-          ? 'Non définie' 
+          ? 'Not Defined' 
           : DateFormat('dd/MM/yyyy HH:mm').format(dateTime!),
       ),
       onTap: onTap,

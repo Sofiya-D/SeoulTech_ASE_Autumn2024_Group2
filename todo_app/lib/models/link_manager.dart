@@ -48,7 +48,7 @@ class _LinkManagerState extends State<LinkManager> {
       await launchUrl(Uri.parse(url));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Impossible d\'ouvrir le lien')),
+        SnackBar(content: Text('Unable to open link')),
       );
     }
   }
@@ -66,7 +66,7 @@ class _LinkManagerState extends State<LinkManager> {
                 child: TextField(
                   controller: _linkController,
                   decoration: InputDecoration(
-                    labelText: 'Ajouter un lien',
+                    labelText: 'Add a Link',
                     hintText: 'https://example.com',
                     border: OutlineInputBorder(),
                   ),

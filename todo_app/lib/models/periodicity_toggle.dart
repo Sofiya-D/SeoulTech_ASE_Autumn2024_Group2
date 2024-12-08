@@ -93,7 +93,7 @@ class _PeriodicityToggleState extends State<PeriodicityToggle> {
     if (widget.dueDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Veuillez d\'abord sélectionner une date de fin'),
+          content: Text('Please select an end date first'),
           backgroundColor: Colors.red,
         ),
       );
@@ -170,7 +170,7 @@ class _PeriodicityToggleState extends State<PeriodicityToggle> {
       children: [
         Row(
           children: [
-            const Text('Tâche périodique'),
+            const Text('Recurring Task'),
             Switch(
               value: _isPeriodic,
               onChanged: (bool value) {
@@ -178,7 +178,7 @@ class _PeriodicityToggleState extends State<PeriodicityToggle> {
                 // show error message if no there is no due date
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Veuillez d\'abord sélectionner une date de fin'),
+                    content: Text('Please select an end date first'),
                     backgroundColor: Colors.red,
                   ),
                 );
@@ -218,7 +218,7 @@ class _PeriodicityToggleState extends State<PeriodicityToggle> {
                 child: TextField(
                   controller: _daysController,
                   decoration: const InputDecoration(
-                    labelText: 'Jours',
+                    labelText: 'Days',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
@@ -230,7 +230,7 @@ class _PeriodicityToggleState extends State<PeriodicityToggle> {
                 child: TextField(
                   controller: _monthsController,
                   decoration: const InputDecoration(
-                    labelText: 'Mois',
+                    labelText: 'Months',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
@@ -242,7 +242,7 @@ class _PeriodicityToggleState extends State<PeriodicityToggle> {
                 child: TextField(
                   controller: _yearsController,
                   decoration: const InputDecoration(
-                    labelText: 'Années',
+                    labelText: 'Years',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
@@ -260,13 +260,13 @@ class _PeriodicityToggleState extends State<PeriodicityToggle> {
   String _getPresetLabel(PresetPeriodicity preset) {
     switch (preset) {
       case PresetPeriodicity.daily:
-        return 'Quotidien';
+        return 'Daily';
       case PresetPeriodicity.weekly:
-        return 'Hebdomadaire';
+        return 'Weekly';
       case PresetPeriodicity.monthly:
-        return 'Mensuel';
+        return 'Monthly';
       case PresetPeriodicity.yearly:
-        return 'Annuel';
+        return 'Yearly';
     }
   }
 

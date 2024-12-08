@@ -41,15 +41,15 @@ class QuickDateButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _QuickDateButton(
-          label: 'Aujourd\'hui',
+          label: 'Today',
           onPressed: () => _setQuickDate(QuickDateOption.today),
         ),
         _QuickDateButton(
-          label: 'Cette semaine',
+          label: 'This Week',
           onPressed: () => _setQuickDate(QuickDateOption.thisWeek),
         ),
         _QuickDateButton(
-          label: 'Ce mois',
+          label: 'This Month',
           onPressed: () => _setQuickDate(QuickDateOption.thisMonth),
         ),
       ],

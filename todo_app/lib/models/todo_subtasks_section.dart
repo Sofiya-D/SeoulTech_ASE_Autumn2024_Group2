@@ -49,7 +49,7 @@ class _TodoSubtasksSectionState extends State<TodoSubtasksSection> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Sous-tâches',
+                  'Subtasks',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -58,7 +58,7 @@ class _TodoSubtasksSectionState extends State<TodoSubtasksSection> {
                 ElevatedButton.icon(
                   onPressed: _addSubtask,
                   icon: const Icon(Icons.add),
-                  label: const Text('Ajouter'),
+                  label: const Text('Add'),
                 ),
               ],
             ),
@@ -117,16 +117,16 @@ class _SubtaskCardState extends State<SubtaskCard> {
       child: Column(
         children: [
           ListTile(
-            title: Text('Sous-tâche ${widget.index + 1}'),
+            title: Text('Subtask ${widget.index + 1}'),
             subtitle: TextFormField(
               controller: widget.subtask.title,
               decoration: const InputDecoration(
-                labelText: 'Titre *',
+                labelText: 'Title *',
                 border: OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Veuillez entrer un titre';
+                  return 'Please enter a title';
                 }
                 return null;
               },
@@ -168,7 +168,7 @@ class _SubtaskCardState extends State<SubtaskCard> {
                   TextFormField(
                     controller: widget.subtask.tags,
                     decoration: const InputDecoration(
-                      labelText: 'Tags (séparés par des virgules)',
+                      labelText: 'Tags (comma-separated)',
                       border: OutlineInputBorder(),
                     ),
                   ),
