@@ -51,27 +51,33 @@ class _SettingsPageState extends State<SettingsPage> {
           Divider(),
 
           // Text-to-Speech Enabler
-          SwitchListTile(
-            value: settingsManager.textToSpeechEnabled, // Replace with actual value from state management
-            title: Text('Enable Text-to-Speech'),
-            secondary: Icon(Icons.hearing),
-            onChanged: (value) {
-              setState(() {
-                settingsManager.textToSpeechEnabled = value; // Update the state
-              });
+          ValueListenableBuilder<bool>(
+            valueListenable: settingsManager.textToSpeechEnabledNotifier,
+            builder: (context, textToSpeechEnabled, child) {
+              return SwitchListTile(
+                value: textToSpeechEnabled,
+                title: Text('Enable Text-to-Speech'),
+                secondary: Icon(Icons.hearing),
+                onChanged: (value) {
+                  settingsManager.textToSpeechEnabled = value;
+                },
+              );
             },
           ),
           Divider(),
 
           // Speech-to-Text Enabler
-          SwitchListTile(
-            value: settingsManager.speechToTextEnabled, // Replace with actual value from state management
-            title: Text('Enable Speech-to-Text'),
-            secondary: Icon(Icons.mic_outlined),
-            onChanged: (value) {
-              setState(() {
-                settingsManager.speechToTextEnabled = value; // Update the state
-              });
+          ValueListenableBuilder<bool>(
+            valueListenable: settingsManager.speechToTextEnabledNotifier,
+            builder: (context, speechToTextEnabled, child) {
+              return SwitchListTile(
+                value: speechToTextEnabled,
+                title: Text('Enable Speech-to-Text'),
+                secondary: Icon(Icons.mic_outlined),
+                onChanged: (value) {
+                  settingsManager.speechToTextEnabled = value;
+                },
+              );
             },
           ),
           Divider(),
@@ -110,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
-      floatingActionButton: const FloatingButtons(),
+      floatingActionButton: FloatingButtons(),
     );
   }
 

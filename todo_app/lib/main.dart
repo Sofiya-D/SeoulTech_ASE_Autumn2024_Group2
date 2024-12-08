@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:todo_app/models/notification_service.dart';
-import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
 import 'package:todo_app/models/database_manager.dart'; // to manage the tasks database

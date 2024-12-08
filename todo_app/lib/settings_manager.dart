@@ -11,41 +11,45 @@ class SettingsManager {
     _loadSettings();
   }
 
-  bool _speechToTextEnabled = false;
-  bool _textToSpeechEnabled = false;
+  final ValueNotifier<bool> _speechToTextEnabledNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _textToSpeechEnabledNotifier = ValueNotifier<bool>(false);
   SharedPreferences? _prefs;
 
+  // Getters for the value notifiers
+  ValueNotifier<bool> get speechToTextEnabledNotifier => _speechToTextEnabledNotifier;
+  ValueNotifier<bool> get textToSpeechEnabledNotifier => _textToSpeechEnabledNotifier;
+
   // Getters for the private variables
-  bool get speechToTextEnabled => _speechToTextEnabled;
-  bool get textToSpeechEnabled => _textToSpeechEnabled;
+  bool get speechToTextEnabled => _speechToTextEnabledNotifier.value;
+  bool get textToSpeechEnabled => _textToSpeechEnabledNotifier.value;
 
   // Method to load saved settings
   Future<void> _loadSettings() async {
     _prefs = await SharedPreferences.getInstance();
-    _speechToTextEnabled = _prefs?.getBool('speechToTextEnabled') ?? false;
-    _textToSpeechEnabled = _prefs?.getBool('textToSpeechEnabled') ?? false;
+    _speechToTextEnabledNotifier.value = _prefs?.getBool('speechToTextEnabled') ?? false;
+    _textToSpeechEnabledNotifier.value = _prefs?.getBool('textToSpeechEnabled') ?? false;
   }
 
   // Method to save settings
   Future<void> _saveSettings() async {
-    await _prefs?.setBool('speechToTextEnabled', _speechToTextEnabled);
-    await _prefs?.setBool('textToSpeechEnabled', _textToSpeechEnabled);
+    await _prefs?.setBool('speechToTextEnabled', _speechToTextEnabledNotifier.value);
+    await _prefs?.setBool('textToSpeechEnabled', _textToSpeechEnabledNotifier.value);
   }
 
   // Setter for Speech to Text with persistence
   set speechToTextEnabled(bool value) {
-    _speechToTextEnabled = value;
+    _speechToTextEnabledNotifier.value = value;
     _saveSettings();
   }
 
   // Setter for Text to Speech with persistence
   set textToSpeechEnabled(bool value) {
-    _textToSpeechEnabled = value;
+    _textToSpeechEnabledNotifier.value = value;
     _saveSettings();
   }
 
   void handleTextToSpeech(BuildContext context) {
-    if (!_textToSpeechEnabled) return;
+    if (!_textToSpeechEnabledNotifier.value) return;
 
     showDialog(
       context: context,
@@ -70,7 +74,7 @@ class SettingsManager {
   }
 
   void handleSpeechToText(BuildContext context) {
-    if (!_speechToTextEnabled) return;
+    if (!_speechToTextEnabledNotifier.value) return;
 
     showDialog(
       context: context,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 
-import 'settings_manager.dart';
-import 'floating_buttons.dart';
 
 
 class CreateTaskPage extends StatelessWidget {

@@ -133,7 +133,7 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, events) {
                 if (events.isNotEmpty) {
-                  final maxVisibleTasks = 3; // Set the maximum number of tasks to display directly
+                  const maxVisibleTasks = 3; // Set the maximum number of tasks to display directly
                   final tasks = events.cast<Todo>();
                   final visibleTasks = tasks.take(maxVisibleTasks).toList();
                   final overflowCount = tasks.length - maxVisibleTasks;
@@ -151,7 +151,7 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
                             shape: BoxShape.circle,
                           ),
                         );
-                      }).toList(),
+                      }),
                       if (overflowCount > 0)
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -180,14 +180,6 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
           _buildTaskList(),
         ],
       ),
-      /*floatingActionButton: FloatingButtons(
-        onTextToSpeechPressed: () {
-          settingsManager.handleTextToSpeech(context);
-        },
-        onSpeechToTextPressed: () {
-          settingsManager.handleSpeechToText(context);
-        },
-      ),*/
     );
   }
 
