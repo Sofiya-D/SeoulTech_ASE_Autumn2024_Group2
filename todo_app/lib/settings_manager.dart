@@ -56,7 +56,7 @@ class SettingsManager {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Text-to-Speech Action'),
-          content: Text('You have activated the Text-to-Speech feature!'),
+          content: Text('You have activated the Text-to-Speech feature\nThis functionality is not yet available!'),
           actions: [
             TextButton(
               onPressed: () {
@@ -81,7 +81,7 @@ class SettingsManager {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Speech-to-Text Action'),
-          content: Text('You have activated the Speech-to-Text feature!'),
+          content: Text('You have activated the Speech-to-Text feature!\nThis functionality is not yet available'),
           actions: [
             TextButton(
               onPressed: () {

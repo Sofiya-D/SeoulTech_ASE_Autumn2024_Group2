@@ -180,6 +180,7 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
           _buildTaskList(),
         ],
       ),
+      //floatingActionButton: FloatingButtons(),
     );
   }
 

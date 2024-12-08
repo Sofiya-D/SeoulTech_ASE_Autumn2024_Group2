@@ -9,6 +9,7 @@ import 'statistics_page.dart';
 import 'tasks_page.dart';
 // import 'create_task_page.dart';
 import 'settings_page.dart';
+import 'floating_buttons.dart';
 
 import 'package:todo_app/test_data/example_tasks.dart';
 
@@ -259,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Theme.of(context).colorScheme.primaryContainer,
         child: page,
       ),
-      floatingActionButton: appState.isFloatingButtonEnabled
+      /*floatingActionButton: appState.isFloatingButtonEnabled
           ? FloatingActionButton(
               onPressed: () {
                 showDialog(
@@ -277,7 +278,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: Icon(Icons.add),
             )
-          : null,
+          : null,*/
+      floatingActionButton: FloatingButtons(),
     );
   }
 }
