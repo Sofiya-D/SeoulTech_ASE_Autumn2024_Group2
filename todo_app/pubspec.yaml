@@ -35,7 +35,7 @@ dependencies:
   table_calendar: ^3.0.9
   #text_to_speech: ^0.2.3
   flutter_colorpicker: ^1.0.3
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.3.3
 
   # for date to string custom formatting
   intl: ^0.19.0
