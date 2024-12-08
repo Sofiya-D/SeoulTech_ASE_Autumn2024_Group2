@@ -234,7 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ListTile(
                 leading: Icon(Icons.bar_chart),
-                title: Text('Statistics'),
+                title: Text('Performance Review'),
                 onTap: () {
                   setState(() {
                     selectedIndex = 3;

@@ -329,6 +329,13 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
             onPressed: () {
               setState(() {
                 task.isCompleted = !task.isCompleted; // Toggle the completion status
+                /*if (task.isCompleted) {
+                  // When task is marked as completed, set the completion date to today
+                  task.completionDate = DateTime.now();
+                } else {
+                  // When task is unmarked, clear the completion date
+                  task.completionDate = null; // or '' depending on your data type
+                }*/
               });
             },
           ),
