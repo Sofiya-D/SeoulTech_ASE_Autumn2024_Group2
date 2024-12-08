@@ -9,11 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:todo_app/main.dart';
+import 'package:todo_app/models/database_manager.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    final tasks = await DatabaseManager.instance.getAllTasks(); // Retrieve tasks from SQLite.
+
+    
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(tasks: tasks,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
