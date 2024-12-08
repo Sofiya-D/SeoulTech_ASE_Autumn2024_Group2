@@ -13,8 +13,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = false;
-  //bool _textToSpeechEnabled = false;
-  //bool _speechToTextEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +59,8 @@ class _SettingsPageState extends State<SettingsPage> {
               setState(() {
                 settingsManager.textToSpeechEnabled = value; // Update the state
               });
-              //_handleTextToSpeech(context); // Handle Text-to-speech toggle
             },
           ),
-          /*if (_textToSpeechEnabled) // Button appears when Text-to-Speech is enabled
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  _handleTextToSpeech(context);
-                },
-                child: Text('Perform Text-to-Speech Action'),
-              ),
-            ),*/
           Divider(),
 
           // Speech-to-Text Enabler
@@ -85,19 +72,8 @@ class _SettingsPageState extends State<SettingsPage> {
               setState(() {
                 settingsManager.speechToTextEnabled = value; // Update the state
               });
-              //_handleSpeechToText(context);// Handle Speech-to-Text toggle
             },
           ),
-          /*if (_speechToTextEnabled) // Button appears when Speech-to-Text is enabled
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  _handleSpeechToText(context);
-                },
-                child: Text('Perform Speech-to-Text Action'),
-              ),
-            ),*/
           Divider(),
 
           // Tags Settings
@@ -134,39 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingButtons(
-        onTextToSpeechPressed: () {
-          settingsManager.handleTextToSpeech(context);
-        },
-        onSpeechToTextPressed: () {
-          settingsManager.handleSpeechToText(context);
-        },
-      ),
-      /*floatingActionButton: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (_textToSpeechEnabled)
-          FloatingActionButton(
-            heroTag: "textToSpeechButton",
-            onPressed: () {
-              _handleTextToSpeech(context);
-            },
-            tooltip: 'Text-to-Speech Action',
-            child: Icon(Icons.hearing),
-          ),
-        if (_speechToTextEnabled)
-          SizedBox(height: 16), // Add spacing between buttons
-        if (_speechToTextEnabled)
-          FloatingActionButton(
-            heroTag: "speechToTextButton",
-            onPressed: () {
-              _handleSpeechToText(context);
-            },
-            tooltip: 'Speech-to-Text Action',
-            child: Icon(Icons.mic),
-          ),
-      ],
-    ),*/
+      floatingActionButton: const FloatingButtons(),
     );
   }
 
@@ -329,124 +273,6 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
-
-  /*
-  // Text-to-speech
-  void _handleTextToSpeech(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Text-to-Speech Action'),
-          content: Text('You have activated the Text-to-Speech feature!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-  */
-
-  /*
-  // Text-to-speech
-  void _handleTextToSpeech(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        if (_textToSpeechEnabled == true) {
-          return AlertDialog(
-            title: Text('Text-To-Speech Enabled'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        }
-        else {
-          return AlertDialog(
-            title: Text('Text-To-Speech Disabled'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        }
-      },
-    );
-  }
-  */
-
-  /*
-  // Speech-to-text
-  void _handleSpeechToText(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Speech-to-Text Action'),
-          content: Text('You have activated the Speech-to-Text feature!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-  */
-
-  /*
-  // Speech-to-text
-  void _handleSpeechToText(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        if (_speechToTextEnabled == true) {
-          return AlertDialog(
-            title: Text('Speech-To-Text Enabled'),actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        }
-        else {
-          return AlertDialog(
-            title: Text('Speech-To-Text Disabled'),actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        }
-      },
-    );
-  }
-  */
 
   // Tag Settings
   void _showTagSettings(BuildContext context) {

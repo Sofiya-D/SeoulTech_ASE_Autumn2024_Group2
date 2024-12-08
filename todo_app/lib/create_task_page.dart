@@ -18,14 +18,14 @@ class CreateTaskPage extends StatelessWidget {
           Text('This is the Create Task Page'),
         ],
       ),
-      floatingActionButton: FloatingButtons(
+      /*floatingActionButton: FloatingButtons(
         onTextToSpeechPressed: () {
           settingsManager.handleTextToSpeech(context);
         },
         onSpeechToTextPressed: () {
           settingsManager.handleSpeechToText(context);
         },
-      ),
+      ),*/
     );
   }
 }

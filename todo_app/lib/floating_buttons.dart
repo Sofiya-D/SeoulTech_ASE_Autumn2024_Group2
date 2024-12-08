@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
+import 'settings_manager.dart';
 
 class FloatingButtons extends StatelessWidget {
-  final VoidCallback onTextToSpeechPressed;
-  final VoidCallback onSpeechToTextPressed;
-
-  const FloatingButtons({
-    Key? key,
-    required this.onTextToSpeechPressed,
-    required this.onSpeechToTextPressed,
-  }) : super(key: key);
+  const FloatingButtons({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        FloatingActionButton(
-          heroTag: 'textToSpeech',
-          onPressed: onTextToSpeechPressed,
-          tooltip: 'Activate Text-to-Speech',
-          child: const Icon(Icons.hearing),
-        ),
-        const SizedBox(height: 16),
-        FloatingActionButton(
-          heroTag: 'speechToText',
-          onPressed: onSpeechToTextPressed,
-          tooltip: 'Activate Speech-to-Text',
-          child: const Icon(Icons.mic),
-        ),
+        // Text-to-Speech Floating Button
+        if (settingsManager.textToSpeechEnabled)
+          FloatingActionButton(
+            heroTag: 'textToSpeech',
+            onPressed: () => settingsManager.handleTextToSpeech(context),
+            tooltip: 'Activate Text-to-Speech',
+            child: const Icon(Icons.hearing),
+          ),
+        
+        // Add some spacing if both buttons are visible
+        if (settingsManager.textToSpeechEnabled && settingsManager.speechToTextEnabled)
+          const SizedBox(height: 16),
+        
+        // Speech-to-Text Floating Button
+        if (settingsManager.speechToTextEnabled)
+          FloatingActionButton(
+            heroTag: 'speechToText',
+            onPressed: () => settingsManager.handleSpeechToText(context),
+            tooltip: 'Activate Speech-to-Text',
+            child: const Icon(Icons.mic),
+          ),
       ],
     );
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/main.dart'; // Import the state management file containing `MyAppState`
-import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/todo.dart'; // Import the file where `Todo` is defined
 
 import 'package:todo_app/models/task_sorter.dart';
@@ -22,9 +20,7 @@ class TasksPageState extends State<TasksPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var theme = Theme.of(context);
-    var titleStyle = theme.textTheme.titleLarge!.copyWith(
-      color: theme.colorScheme.onSurface,
-    );
+    var titleStyle = theme.textTheme.titleLarge!.copyWith();
 
     if (appState.taskList.isEmpty) {
       return Center(
@@ -38,62 +34,65 @@ class TasksPageState extends State<TasksPage> {
     // Sort tasks based on the selected criteria
     var groupedTasks = groupTasksByCriteria(sortedTasks, selectedSort);
 
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 15.0),
-                child: Text(
-                  'You have ${sortedTasks.length} tasks:',
-                  style: titleStyle,
+    return Container(
+      color: theme.colorScheme.surface,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: Text(
+                    'You have ${sortedTasks.length} tasks:',
+                    style: titleStyle,
+                  ),
                 ),
-              ),
-              // Add the sorting selector
-              DropdownButton<String>(
-                value: selectedSort,
-                items: [
-                  DropdownMenuItem(
-                      value: 'dueDate', child: Text('Sort by Due Date')),
-                  DropdownMenuItem(
-                      value: 'priority', child: Text('Sort by Priority')),
-                  DropdownMenuItem(
-                      value: 'tag', child: Text('Sort by Tag')),
-                  DropdownMenuItem(
-                      value: 'title', child: Text('Sort by Title')),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      selectedSort = value; // Update the sorting criteria
-                    });
-                  }
-                },
-              ),
-            ],
-          ),
-          // option 1
-          // TaskListSection(
-          //     sectionTitle: "Section 1",
-          //     taskSubList: sortedTasks,
-          //     selectedSort: selectedSort)
-          // end of option 1
-          // option 2
-          Expanded(
-            child: ListView(
-              children: groupedTasks.entries.map((entry) {
-                return TaskListSection(
-                  sectionTitle: entry.key,
-                  taskSubList: entry.value,
-                  selectedSort: selectedSort,
-                );
-              }).toList(),
+                // Add the sorting selector
+                DropdownButton<String>(
+                  value: selectedSort,
+                  items: [
+                    DropdownMenuItem(
+                        value: 'dueDate', child: Text('Sort by Due Date')),
+                    DropdownMenuItem(
+                        value: 'priority', child: Text('Sort by Priority')),
+                    DropdownMenuItem(
+                        value: 'tag', child: Text('Sort by Tag')),
+                    DropdownMenuItem(
+                        value: 'title', child: Text('Sort by Title')),
+                  ],
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        selectedSort = value; // Update the sorting criteria
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
-          ),
-          // end of option 2
-        ],
+            // option 1
+            // TaskListSection(
+            //     sectionTitle: "Section 1",
+            //     taskSubList: sortedTasks,
+            //     selectedSort: selectedSort)
+            // end of option 1
+            // option 2
+            Expanded(
+              child: ListView(
+                children: groupedTasks.entries.map((entry) {
+                  return TaskListSection(
+                    sectionTitle: entry.key,
+                    taskSubList: entry.value,
+                    selectedSort: selectedSort,
+                  );
+                }).toList(),
+              ),
+            ),
+            // end of option 2
+          ],
+        ),
       ),
     );
   }
@@ -133,14 +132,14 @@ class TaskListSectionState extends State<TaskListSection> {
               child: Text(
                 sectionTitle,
                 style: theme.textTheme.titleMedium!.copyWith(
-                  color: theme.colorScheme.onSurface,
+                  //color: theme.colorScheme.onSurface,
                 ),
               ),
             ),
             IconButton(
               icon: Icon(
                 _isExpanded ? Icons.expand_less : Icons.expand_more,
-                color: theme.colorScheme.onSurface,
+                // color: theme.colorScheme.onSurface,
               ),
               onPressed: () {
                 // Pass the toggle callback

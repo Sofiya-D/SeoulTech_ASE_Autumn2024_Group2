@@ -7,7 +7,6 @@ import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/models/todo_form_view.dart';
 import 'package:todo_app/models/database_manager.dart'; // to manage the tasks database
 import 'calendar_page.dart';
-import 'cemetry_page.dart';
 import 'statistics_page.dart';
 import 'tasks_page.dart';
 // import 'create_task_page.dart';
@@ -136,7 +135,7 @@ class MyAppState extends ChangeNotifier {
     DatabaseManager.instance.updateTask(todo);
     _notificationService.cancelTodoNotifications(todo);
     if (todo.periodicity != null && todo.periodicity!.isNull()) {
-      Todo new_todo = todo.duplicateWith(dueDate: todo.periodicity!.calculateNextOccurrence(todo.dueDate!));
+      Todo newTodo = todo.duplicateWith(dueDate: todo.periodicity!.calculateNextOccurrence(todo.dueDate!));
     }
     addTask(todo);
     notifyListeners();
@@ -185,9 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
         page = StatisticsPage();
         break;
       case 4:
-        page = CemetryPage();
-        break;
-      case 5:
         page = SettingsPage();
         break;
       default:
@@ -248,21 +244,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.history),
-                title: Text('Cemetery'),
-                onTap: () {
-                  setState(() {
-                    selectedIndex = 4;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Settings'),
                 onTap: () {
                   setState(() {
-                    selectedIndex = 5;
+                    selectedIndex = 4;
                   });
                   Navigator.pop(context);
                 },

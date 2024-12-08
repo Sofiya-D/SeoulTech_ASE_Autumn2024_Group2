@@ -218,7 +218,6 @@ class _DateTile extends StatelessWidget {
   final VoidCallback onClear;
 
   const _DateTile({
-    super.key,
     required this.title,
     required this.date,
     required this.onTap,
@@ -250,7 +249,6 @@ class _DateTimeTile extends StatelessWidget {
   final VoidCallback onClear;
 
   const _DateTimeTile({
-    super.key,
     required this.title,
     required this.dateTime,
     required this.onTap,

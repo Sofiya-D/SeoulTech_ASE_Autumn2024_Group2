@@ -9,7 +9,7 @@ import 'settings_manager.dart';
 class CalendarPage extends StatefulWidget {
   final List<Todo> taskList;
 
-  const CalendarPage({Key? key, required this.taskList}) : super(key: key);
+  const CalendarPage({super.key, required this.taskList});
 
   @override
   _CalendarPageState createState() => _CalendarPageState();
@@ -46,79 +46,6 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
-/*
-  Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
-    final Map<DateTime, List<Todo>> events = {};
-
-    for (var todo in todos) {
-      // Handle tasks with periodicity
-      if (todo.periodicity != null && todo.dueDate != null) {
-        DateTime current = todo.startDate ?? todo.dueDate!;
-        while (!current.isAfter(todo.dueDate!)) {
-          final date = DateTime(current.year, current.month, current.day); // Normalize date
-          if (!_isInstanceCompleted(todo, date)) {
-            events.putIfAbsent(date, () => []).add(todo);
-          }
-          current = todo.periodicity!.calculateNextOccurrence(current);
-        }
-      } 
-      else if (todo.startDate != null && todo.dueDate != null) {
-        DateTime current = todo.startDate!;
-        while (!current.isAfter(todo.dueDate!)) {
-          final date = DateTime(current.year, current.month, current.day); // Normalize date
-          events.putIfAbsent(date, () => []).add(todo);
-          current = current.add(const Duration(days: 1));
-        }
-      } 
-      else if (todo.dueDate != null) {
-        final date = DateTime(todo.dueDate!.year, todo.dueDate!.month, todo.dueDate!.day);
-        events.putIfAbsent(date, () => []).add(todo);
-      }
-    }
-
-    return events;
-  }
-*/ 
-/*
-  Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
-  final Map<DateTime, List<Todo>> events = {};
-
-  for (var todo in todos) {
-    // Handle tasks with periodicity
-    if (todo.periodicity != null && todo.dueDate != null) {
-      DateTime current = todo.startDate ?? todo.dueDate!;
-      while (!current.isAfter(todo.dueDate!)) {
-        final date = DateTime(current.year, current.month, current.day); // Normalize date
-        if (!_isInstanceCompleted(todo, date)) {
-          events.putIfAbsent(date, () => []).add(todo);
-        }
-        current = todo.periodicity!.calculateNextOccurrence(current);
-      }
-    } 
-    // Handle tasks with a range of dates
-    else if (todo.startDate != null && todo.dueDate != null) {
-      DateTime current = todo.startDate!;
-      while (!current.isAfter(todo.dueDate!)) {
-        final date = DateTime(current.year, current.month, current.day); // Normalize date
-        if (!_isInstanceCompleted(todo, date)) {
-          events.putIfAbsent(date, () => []).add(todo);
-        }
-        current = current.add(const Duration(days: 1));
-      }
-    } 
-    // Handle tasks with only a due date
-    else if (todo.dueDate != null) {
-      final date = DateTime(todo.dueDate!.year, todo.dueDate!.month, todo.dueDate!.day);
-      if (!_isInstanceCompleted(todo, date)) {
-        events.putIfAbsent(date, () => []).add(todo);
-      }
-    }
-  }
-
-  return events;
-}
-*/
-
 Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
     final Map<DateTime, List<Todo>> events = {};
 
@@ -138,27 +65,6 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
 
     return events;
   }
-
-/*
-  Map<DateTime, List<Todo>> _groupTasksByDueDate(List<Todo> todos) {
-    final Map<DateTime, List<Todo>> events = {};
-
-    for (var todo in todos) {
-      if (todo.dueDate != null) {
-        final date = DateTime(
-          todo.dueDate!.year,
-          todo.dueDate!.month,
-          todo.dueDate!.day,
-        ); // Normalize to just the date.
-        if (events[date] == null) {
-          events[date] = [];
-        }
-        events[date]!.add(todo);
-      }
-    }
-    return events;
-  }
-*/
 
   /// Filters tasks based on selected importanceLevel and completion status.
   List<Todo> _filterTasks(List<Todo> tasks) {
@@ -227,80 +133,78 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, events) {
                 if (events.isNotEmpty) {
+                  final maxVisibleTasks = 3; // Set the maximum number of tasks to display directly
+                  final tasks = events.cast<Todo>();
+                  final visibleTasks = tasks.take(maxVisibleTasks).toList();
+                  final overflowCount = tasks.length - maxVisibleTasks;
+
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: events.map((event) {
-                      final todo = event as Todo;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                        width: 8.0,
-                        height: 8.0,
-                        decoration: BoxDecoration(
-                          color: _getTaskColor(todo),
-                          //color: todo.isCompleted ? Colors.green : Colors.red,
-                          shape: BoxShape.circle,
+                    children: [
+                      ...visibleTasks.map((todo) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                          width: 8.0,
+                          height: 8.0,
+                          decoration: BoxDecoration(
+                            color: _getTaskColor(todo),
+                            shape: BoxShape.circle,
+                          ),
+                        );
+                      }).toList(),
+                      if (overflowCount > 0)
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                          padding: const EdgeInsets.all(2.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            '+$overflowCount',
+                            style: const TextStyle(
+                              fontSize: 10.0,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      );
-                    }).toList(),
+                    ],
                   );
                 }
                 return null;
               },
             ),
+
           ),
           const SizedBox(height: 8.0),
           _buildTaskList(),
         ],
       ),
       /*floatingActionButton: FloatingButtons(
-        textToSpeechEnabled: textToSpeechEnabled,
-        speechToTextEnabled: speechToTextEnabled,
-        onTextToSpeechPressed: () {
-          // Define Text-to-Speech action here
-          print("Text-to-Speech button pressed");
-        },
-        onSpeechToTextPressed: () {
-          // Define Speech-to-Text action here
-          print("Speech-to-Text button pressed");
-        },
-      ),*/
-      floatingActionButton: FloatingButtons(
         onTextToSpeechPressed: () {
           settingsManager.handleTextToSpeech(context);
         },
         onSpeechToTextPressed: () {
           settingsManager.handleSpeechToText(context);
         },
-      ),
+      ),*/
     );
   }
 
   /// Builds an interactive legend for filtering tasks.
-  Widget _buildLegend() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+ Widget _buildLegend() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 8.0,
         children: [
           _buildLegendButton('All tasks', null, Colors.grey),
-          _buildLegendButton('Unimportant', 1, const Color.fromARGB(255, 155, 151, 255)),
-          _buildLegendButton('Less important', 2, Colors.blue),
-          _buildLegendButton('Important', 3, const Color.fromARGB(255, 255, 221, 0)),
-          _buildLegendButton('Urgent', 4, Colors.orange),
           _buildLegendButton('Very Urgent', 5, Colors.red),
-          Row(
-            children: [
-              Checkbox(
-                value: _showCompleted,
-                onChanged: (value) {
-                  setState(() {
-                    _showCompleted = value!;
-                  });
-                },
-              ),
-              const Text('Completed'),
-            ],
-          ),
+          _buildLegendButton('Urgent', 4, Colors.orange),
+          _buildLegendButton('Important', 3, const Color.fromARGB(255, 255, 221, 0)),
+          _buildLegendButton('Less important', 2, Colors.blue),
+          _buildLegendButton('Unimportant', 1, const Color.fromARGB(255, 155, 151, 255)),         
         ],
       ),
     );
@@ -323,13 +227,14 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
   }
 
   Widget _buildAdditionalFilters() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 8.0,
         children: [
           _buildFilterButton(
-            label: 'Repetitive tasks',
+            label: 'Repetitive',
             isActive: _showRepetitiveTasks,
             onPressed: () {
               setState(() {
@@ -340,7 +245,7 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
             },
           ),
           _buildFilterButton(
-            label: 'Loose deadlines tasks',
+            label: 'Loose deadlines',
             isActive: _showDifferentDateTasks,
             onPressed: () {
               setState(() {
@@ -349,6 +254,19 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
                 _showSameDateTasks = false;
               });
             },
+          ),
+          Row(
+            children: [
+              Checkbox(
+                value: _showCompleted,
+                onChanged: (value) {
+                  setState(() {
+                    _showCompleted = value!;
+                  });
+                },
+              ),
+              const Text('Completed'),
+            ],
           ),
         ],
       ),
@@ -390,92 +308,43 @@ Map<DateTime, List<Todo>> _generateDateRangeEvents(List<Todo> todos) {
     return _completedInstances[normalizedDate]?.contains(task) ?? false;
   }
 
-
   Widget _buildTaskList() {
-    final selectedDate = _selectedDay != null
-        ? DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day)
-        : null;
-    List<Todo> tasks = selectedDate != null ? _events[selectedDate] ?? [] : [];
-    final filteredTasks = _filterTasks(tasks);
+  final selectedDate = _selectedDay != null
+      ? DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day)
+      : null;
+  final tasks = selectedDate != null ? _events[selectedDate] ?? [] : [];
 
-    if (filteredTasks.isEmpty) {
-      return const Center(child: Text('No tasks for this day.'));
-    }
-
-    return Expanded(
-      child: ListView.builder(
-        itemCount: filteredTasks.length,
-        itemBuilder: (context, index) {
-          final task = filteredTasks[index];
-          final dueTime = task.dueDate != null
-            ? DateFormat('h:mm a').format(task.dueDate!)
-            : null;
-          return ListTile(
-            title: Text(
-              task.title,
-              //style: TextStyle(color: task.isCompleted ? Colors.green : Colors.red),
+  return Expanded(
+    child: ListView.builder(
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        final task = tasks[index];
+        return ListTile(
+          title: Text(
+            task.title,
+            style: TextStyle(
+              decoration: task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+              color: task.isCompleted ? Colors.grey : Colors.black,
             ),
-            //subtitle: task.description.isNotEmpty ? Text(task.description) : null,
-            subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (dueTime != null) Text('Due at $dueTime'),
-              if (task.description.isNotEmpty) Text(task.description),
-            ],
           ),
+          subtitle: Text(task.description ?? ''),
           trailing: IconButton(
-              icon: Icon(
-                _isInstanceCompleted(task, _selectedDay!)
-                    ? Icons.check_circle
-                    : Icons.radio_button_unchecked,
-                color: _isInstanceCompleted(task, _selectedDay!) ? Colors.green : Colors.red,
-              ),
-              onPressed: () {
-                setState(() {
-                  final normalizedDate = DateTime(
-                    _selectedDay!.year,
-                    _selectedDay!.month,
-                    _selectedDay!.day,
-                  );
-                  print('Normalized Date: $normalizedDate');
-
-                  print('Before: $_completedInstances');
-                  if (_isInstanceCompleted(task, _selectedDay!)) {
-                    // If already completed, mark it as incomplete
-                    _completedInstances[normalizedDate]?.remove(task);
-
-                    // Clean up empty sets to avoid memory issues
-                    if (_completedInstances[normalizedDate]?.isEmpty ?? true) {
-                      _completedInstances.remove(normalizedDate);
-                    }
-                  } 
-                  else {
-                    // Mark the task as completed for this date
-                    _completedInstances.putIfAbsent(normalizedDate, () => {}).add(task);
-                  }
-                  _events = _generateDateRangeEvents(widget.taskList);
-                  print('After: $_completedInstances');
-                });
-              },
+            icon: Icon(
+              task.isCompleted ? Icons.check_box : Icons.check_box_outline_blank,
+              color: task.isCompleted ? Colors.green : Colors.grey,
             ),
-            /*
-            trailing: IconButton(
-              icon: Icon(
-                task.isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-                color: task.isCompleted ? Colors.green : Colors.red,
-              ),
-              onPressed: () {
-                setState(() {
-                  task.isCompleted = !task.isCompleted;
-                });
-              },
-            ),
-            */
-          );
-        },
-      ),
-    );
-  }
+            onPressed: () {
+              setState(() {
+                task.isCompleted = !task.isCompleted; // Toggle the completion status
+              });
+            },
+          ),
+        );
+      },
+    ),
+  );
+}
+
 }
 
 

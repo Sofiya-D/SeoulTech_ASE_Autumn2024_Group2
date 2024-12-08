@@ -62,7 +62,6 @@ class _QuickDateButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const _QuickDateButton({
-    super.key,
     required this.label,
     required this.onPressed,
   });

@@ -220,7 +220,7 @@ class NotificationService {
         minute: notificationTime.minute, //minute: DateTime.now().minute +2
       );
 
-      debugPrint("preparing notification with time : ${potentialNotificationDate}, while DateTime.now() is ${DateTime.now()} and due date is ${todo.dueDate}.");
+      debugPrint("preparing notification with time : $potentialNotificationDate, while DateTime.now() is ${DateTime.now()} and due date is ${todo.dueDate}.");
       debugPrint("notification verification output status : ${potentialNotificationDate.isAfter(DateTime.now()) && 
           potentialNotificationDate.isBefore(todo.dueDate!)}");
       // verify notification date limits
@@ -378,11 +378,9 @@ class NotificationService {
 
     for (PendingNotificationRequest pendingNotificationRequest
         in pendingNotificationRequests) {
-      print(pendingNotificationRequest.id.toString() +
-          " " +
-          (pendingNotificationRequest.payload ?? ""));
+      print("${pendingNotificationRequest.id} ${pendingNotificationRequest.payload ?? ""}");
     }
-    print('NOW ' + tz.TZDateTime.now(tz.local).toString());
+    print('NOW ${tz.TZDateTime.now(tz.local)}');
   }
 }
 

@@ -26,7 +26,6 @@ class TaskListCardState extends State<TaskListCard> {
     var selectedSort = widget.selectedSort;
 
     return Card(
-      color: theme.colorScheme.secondary,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -79,7 +78,7 @@ class TaskCardFirstSection extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var titleStyle = theme.textTheme.titleMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
+      //color: theme.colorScheme.onPrimary,
     );
 
       String label = task.dueDate != null
@@ -119,14 +118,14 @@ class TaskCardFirstSection extends StatelessWidget {
         Container(
           // label on the left
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary,
+            //color: theme.colorScheme.primary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           child: Text(
             label ?? "", // uses label if not null, else uses ""
             style: theme.textTheme.titleMedium!.copyWith(
-              color: theme.colorScheme.onPrimary,
+              // color: theme.colorScheme.onPrimary,
             ),
           ),
         ),
@@ -175,7 +174,7 @@ class TaskCardFirstSection extends StatelessWidget {
         IconButton(
           icon: Icon(
             isExpanded ? Icons.expand_less : Icons.expand_more,
-            color: theme.colorScheme.onPrimary,
+            // color: theme.colorScheme.onPrimary,
           ),
           onPressed: onExpandToggle,
         ),
@@ -204,7 +203,7 @@ class TaskCardSecondSection extends StatelessWidget {
       children: [
         Icon(
           Icons.tag,
-          color: theme.colorScheme.onSecondary,
+          // color: theme.colorScheme.onSecondary,
         ),
         Expanded(
           child: SizedBox(
@@ -219,7 +218,7 @@ class TaskCardSecondSection extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 2.0),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.tertiary,
+                          // color: theme.colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding:
@@ -232,9 +231,8 @@ class TaskCardSecondSection extends StatelessWidget {
                               : tag, // show only the first 6 letters of the tag
                           style: isExpanded
                               ? theme.textTheme.bodyMedium!
-                                  .copyWith(color: theme.colorScheme.onTertiary)
-                              : theme.textTheme.bodyLarge!.copyWith(
-                                  color: theme.colorScheme.onTertiary),
+                                  .copyWith() //copyWith(color: theme.colorScheme.onTertiary)
+                              : theme.textTheme.bodyLarge!.copyWith(),
                         ),
                       ),
                     ),
@@ -279,7 +277,7 @@ class TaskCardThirdSection extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var contentStyle = theme.textTheme.bodyMedium!
-        .copyWith(color: theme.colorScheme.onSurface);
+        .copyWith();
     var taskDateStr = formatTaskDate(task.startDate, task.dueDate);
     var taskPeriodicityStr = formatTaskPeriodicity(task.periodicity);
 
@@ -393,7 +391,7 @@ class TaskCardThirdSection extends StatelessWidget {
                                         horizontal: 2.0, vertical: 4.0),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: contentStyle.color,
+                                        // color: contentStyle.color,
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       padding: EdgeInsets.symmetric(
@@ -403,9 +401,7 @@ class TaskCardThirdSection extends StatelessWidget {
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: theme.textTheme.bodyMedium!
-                                            .copyWith(
-                                                color: theme
-                                                    .colorScheme.onTertiary),
+                                            .copyWith(),
                                       ),
                                     ),
                                   ),
