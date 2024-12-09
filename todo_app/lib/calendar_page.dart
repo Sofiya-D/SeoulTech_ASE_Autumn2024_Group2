@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:intl/intl.dart';
-
-import 'floating_buttons.dart';
-import 'settings_manager.dart';
+// import 'package:intl/intl.dart'
 
 class CalendarPage extends StatefulWidget {
   final List<Todo> taskList;
