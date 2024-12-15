@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:todo_app/models/periodicity.dart';
 import 'package:todo_app/models/notification_service.dart';
@@ -44,7 +45,7 @@ class Todo {
   });
 
   Future<void> scheduleNotifications(NotificationService notificationService) async {
-    if (dueDate != null && isCompleted != false && isDeleted != false) {
+    if (dueDate != null && isCompleted == false && isDeleted == false) {
       await notificationService.scheduleTodoNotifications(
         todo: this,
       );
@@ -100,6 +101,30 @@ class Todo {
       links: map['links'] != null ? map['links'].split(',') : [],
       points: map['points'],
     );
+  }
+
+  String get formattedStartDate => 
+    startDate != null ? DateFormat('dd/MM/yyyy HH:mm').format(startDate!) : 'not defined';
+  
+  String get formattedDueDate => 
+    dueDate != null ? DateFormat('dd/MM/yyyy HH:mm').format(dueDate!) : 'not defined';
+
+  // Méthode pour obtenir une représentation textuelle de l'importance
+  String get importanceLevelText {
+    switch(importanceLevel) {
+      case 1: return 'Unimportant';
+      case 2: return 'Less important';
+      case 3: return 'Important';
+      case 4: return 'Urgent';
+      case 5: return 'Very Urgent';
+      default: return 'not defined';
+    }
+  }
+
+  // Méthode pour obtenir le texte de la périodicité
+  String get periodicityText {
+    if (periodicity == null) return 'None';
+    return '${periodicity!.years} year, ${periodicity!.months} month, ${periodicity!.days} days';
   }
 }
 
@@ -162,6 +187,33 @@ class TodoTask {
     }
 
     return map;
+  }
+
+  /// Convert from Map to use SQLite Database.
+  factory TodoTask.fromMap(Map<String, dynamic> map) {
+    return TodoTask(
+      id: map['id'],
+      title: map['title'],
+      description: map['description'] ?? '',
+      tags: map['tags'] != null ? map['tags'].split(',') : [],
+      startDate: map['startDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              int.tryParse(map['startDate'].toString()) ?? 0)
+          : null,
+      dueDate: map['dueDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              int.tryParse(map['dueDate'].toString()) ?? 0)
+          : null,
+      periodicity: map['periodicity'] != null
+          ? Periodicity.fromJson(map['periodicity'])
+          : null,
+      isDeleted: map['isDeleted'] == 1,
+      isCompleted: map['isCompleted'] == 1,
+      isMissed: map['isMissed'] == 1,
+      folders: map['folders'] != null ? map['folders'].split(',') : [],
+      links: map['links'] != null ? map['links'].split(',') : [],
+      points: map['points'] ?? 0,
+    );
   }
 }
 

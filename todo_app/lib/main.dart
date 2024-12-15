@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/notification_service.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/models/todo_detail_view.dart';
 import 'package:todo_app/models/todo_form_view.dart';
 import 'package:todo_app/models/database_manager.dart'; // to manage the tasks database
 import 'calendar_page.dart';
@@ -130,13 +131,23 @@ class MyAppState extends ChangeNotifier {
   }
 
   void completeTask(Todo todo) {
-    todo.isCompleted == true;
+    todo.isCompleted = true;
+    print("current task : " + todo.title + "\t isCompleted : " + todo.isCompleted.toString());
     DatabaseManager.instance.updateTask(todo);
     _notificationService.cancelTodoNotifications(todo);
-    if (todo.periodicity != null && todo.periodicity!.isNull()) {
-      Todo newTodo = todo.duplicateWith(dueDate: todo.periodicity!.calculateNextOccurrence(todo.dueDate!));
+    
+    // If the task has a periodicity, create a new task for the next occurrence
+    if (todo.periodicity != null && todo.dueDate != null) {
+      Todo newTodo = todo.duplicateWith(
+        dueDate: todo.periodicity!.calculateNextOccurrence(todo.dueDate!),
+        isCompleted: false  // Reset completion for the new task
+      );
+      addTask(newTodo);
     }
-    addTask(todo);
+    
+    for (var task in taskList) {
+      print("task : " + task.title + "\t isCompleted : " + task.isCompleted.toString());
+    }
     notifyListeners();
   }
 }

@@ -110,8 +110,8 @@ Map<String, List<Todo>> groupTasksByCriteria(
 
 bool isDead(Todo task) {
   var now = DateTime.now();
-  return task.dueDate != null &&
-      (task.dueDate!.isBefore(DateTime(now.year, now.month, now.day)) ||
+  return (task.dueDate != null &&
+      task.dueDate!.isBefore(DateTime(now.year, now.month, now.day)) ||
           task.isCompleted ||
           task.isMissed);
 }

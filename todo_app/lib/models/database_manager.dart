@@ -54,7 +54,7 @@ class DatabaseManager {
     // Tasks Table
     await db.execute('''
     CREATE TABLE IF NOT EXISTS $tasksTable (
-      id TEXT PRIMARY KEY,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       description TEXT,
       importanceLevel INTEGER,
@@ -74,7 +74,7 @@ class DatabaseManager {
     // Subtasks Table
     await db.execute('''
   CREATE TABLE IF NOT EXISTS $subtasksTable (
-    id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     description TEXT,
     tags TEXT,
@@ -173,19 +173,53 @@ class DatabaseManager {
   ///
   /// Fetches all the tasks from the database
   /// 
+  // Future<List<Todo>> getAllTasks() async {
+  //   // Open the database
+  //   final db = await database;
+
+  //   // Fetch all rows from the "todos" table
+  //   final List<Map<String, dynamic>> mainTasks = await db.query(tasksTable);
+
+  //   // Map each row to a Todo object
+  //   return mainTasks.map((taskMap) {
+  //     return Todo.fromMap(
+  //         taskMap); // Use the factory constructor of Todo to deserialize
+  //   }).toList();
+  // }
+
   Future<List<Todo>> getAllTasks() async {
-    // Open the database
-    final db = await database;
+  // Open the database
+  final db = await database;
 
-    // Fetch all rows from the "todos" table
-    final List<Map<String, dynamic>> mainTasks = await db.query(tasksTable);
+  // Fetch all rows from the main tasks table
+  final List<Map<String, dynamic>> mainTasks = await db.query(tasksTable);
 
-    // Map each row to a Todo object
-    return mainTasks.map((taskMap) {
-      return Todo.fromMap(
-          taskMap); // Use the factory constructor of Todo to deserialize
+  // Create a list to store tasks with their subtasks
+  List<Todo> tasksWithSubtasks = [];
+
+  // Iterate through each main task
+  for (var taskMap in mainTasks) {
+    // Convert the task map to a Todo object
+    Todo task = Todo.fromMap(taskMap);
+    // Fetch subtasks for this specific task
+    final List<Map<String, dynamic>> subtaskMaps = await db.query(
+      subtasksTable,
+      where: 'parentId = ?',
+      whereArgs: [task.id]
+    );
+
+    // Convert subtask maps to TodoTask objects
+    task.tasks = subtaskMaps.map((subtaskMap) {
+      TodoTask subtask = TodoTask.fromMap(subtaskMap);
+      subtask.parentId = task.id.toString(); // Set the parent ID
+      return subtask;
     }).toList();
+
+    tasksWithSubtasks.add(task);
   }
+
+  return tasksWithSubtasks;
+}
 
   ///
   /// To set the entire database to a defined set of tasks

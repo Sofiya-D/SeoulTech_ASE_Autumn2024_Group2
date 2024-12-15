@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/models/periodicity.dart';
-import 'package:todo_app/models/todo.dart'; // Import the file where `Todo` is defined
+import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/models/todo_detail_view.dart'; // Import the file where `Todo` is defined
 
 class TaskListCard extends StatefulWidget {
   const TaskListCard({
@@ -41,6 +42,16 @@ class TaskListCardState extends State<TaskListCard> {
                 });
               },
               selectedSort: selectedSort,
+              onDetailView: _isExpanded 
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TodoDetailView(todo: task),
+                    ),
+                  );
+                } 
+              : null,
             ),
             // SECOND SECTION
             TaskCardSecondSection(
@@ -52,6 +63,7 @@ class TaskListCardState extends State<TaskListCard> {
               task: task,
               isExpanded: _isExpanded,
             ),
+            
           ],
         ),
       ),
@@ -60,6 +72,137 @@ class TaskListCardState extends State<TaskListCard> {
 }
 
 /// First section of the TaskListCard
+// class TaskCardFirstSection extends StatelessWidget {
+//   const TaskCardFirstSection({
+//     super.key,
+//     required this.task,
+//     required this.isExpanded,
+//     required this.onExpandToggle,
+//     required this.selectedSort,
+//     this.onDetailView,
+//   });
+
+//   final Todo task;
+//   final bool isExpanded;
+//   final VoidCallback onExpandToggle;
+//   final String selectedSort;
+//   final VoidCallback? onDetailView;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     var theme = Theme.of(context);
+//     var titleStyle = theme.textTheme.titleMedium!.copyWith(
+//       //color: theme.colorScheme.onPrimary,
+//     );
+
+//       String label = task.dueDate != null
+//             ? DateFormat('MMM d').format(task.dueDate!)
+//             : "ND";
+
+//     // String? label;
+//     // switch (selectedSort) {
+//     //   case "dueDate":
+//     //     label = task.dueDate != null
+//     //         ? DateFormat('MMM d').format(task.dueDate!)
+//     //         : "ND";
+//     //     break;
+//     //   case "priority":
+//     //     label = task.importanceLevel.toString();
+//     //     break;
+//     //   case "tag":
+//     //     label = task.dueDate != null
+//     //         ? DateFormat('MMM d').format(task.dueDate!)
+//     //         : "ND";
+//     //     break;
+//     //   case "cemetery":
+//     //     label = null;
+//     //     break;
+//     //   case "title":
+//     //     label = task.dueDate != null
+//     //         ? DateFormat('MMM d').format(task.dueDate!)
+//     //         : "ND";
+//     //     break;
+//     //   default:
+//     //     throw UnimplementedError(
+//     //         'Unhandled sorting parameter chosen for task viewing');
+//     // }
+
+//     return Row(
+//       children: [
+//         Container(
+//           // label on the left
+//           decoration: BoxDecoration(
+//             //color: theme.colorScheme.primary,
+//             borderRadius: BorderRadius.circular(8),
+//           ),
+//           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//           child: Text(
+//             label ?? "", // uses label if not null, else uses ""
+//             style: theme.textTheme.titleMedium!.copyWith(
+//               // color: theme.colorScheme.onPrimary,
+//             ),
+//           ),
+//         ),
+//         SizedBox(
+//           // height: !isExpanded ? 25 : null,
+//           //width: 230, // task title width limitation
+//           width: MediaQuery.of(context).size.width - 200,
+//           child: Container(
+//             padding: EdgeInsets.symmetric(horizontal: 6),
+//             child: Text(
+//               task.title,
+//               maxLines: !isExpanded ? 1 : 4, // Limit lines when collapsed
+//               overflow: TextOverflow.ellipsis, // Add ellipsis if cropped
+//               style: titleStyle,
+//               semanticsLabel: task.title,
+//             ),
+//           ),
+//         ),
+//         // Flexible(
+//         //   child: Tooltip(
+//         //     message: task.title,
+//         //     child: Container(
+//         //       padding: EdgeInsets.symmetric(horizontal: 6),
+//         //       child: Text(
+//         //         task.title,
+//         //         maxLines: !isExpanded ? 1 : 2,
+//         //         overflow: TextOverflow.ellipsis,
+//         //         style: titleStyle,
+//         //         semanticsLabel: task.title,
+//         //       ),
+//         //     ),
+//         //   ),
+//         // ),
+//         // Flexible(
+//         //   child: Container(
+//         //     padding: EdgeInsets.symmetric(horizontal: 6),
+//         //     child: Text(
+//         //       task.title,
+//         //       maxLines: !isExpanded ? 1 : null, // Changez null au lieu de 2 quand étendu
+//         //       overflow: !isExpanded ? TextOverflow.ellipsis : TextOverflow.visible, // Ajustez le comportement de l'overflow
+//         //       style: titleStyle,
+//         //       semanticsLabel: task.title,
+//         //     ),
+//         //   ),
+//         // ),
+//         Spacer(), // to push the expand/collapse button to the right
+//         if (isExpanded)
+//           IconButton(
+//             icon: Icon(Icons.visibility, color: theme.colorScheme.primary),
+//             onPressed: onDetailView,
+//           ),
+//         IconButton(
+//           icon: Icon(
+//             isExpanded ? Icons.expand_less : Icons.expand_more,
+//             // color: theme.colorScheme.onPrimary,
+//           ),
+//           onPressed: onExpandToggle,
+//         ),
+//       ],
+//     );
+//   }
+// }
+
 class TaskCardFirstSection extends StatelessWidget {
   const TaskCardFirstSection({
     super.key,
@@ -67,117 +210,70 @@ class TaskCardFirstSection extends StatelessWidget {
     required this.isExpanded,
     required this.onExpandToggle,
     required this.selectedSort,
+    this.onDetailView,
   });
 
   final Todo task;
   final bool isExpanded;
   final VoidCallback onExpandToggle;
   final String selectedSort;
+  final VoidCallback? onDetailView;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var titleStyle = theme.textTheme.titleMedium!.copyWith(
-      //color: theme.colorScheme.onPrimary,
-    );
+    var titleStyle = theme.textTheme.titleMedium!.copyWith();
 
-      String label = task.dueDate != null
-            ? DateFormat('MMM d').format(task.dueDate!)
-            : "ND";
-
-    // String? label;
-    // switch (selectedSort) {
-    //   case "dueDate":
-    //     label = task.dueDate != null
-    //         ? DateFormat('MMM d').format(task.dueDate!)
-    //         : "ND";
-    //     break;
-    //   case "priority":
-    //     label = task.importanceLevel.toString();
-    //     break;
-    //   case "tag":
-    //     label = task.dueDate != null
-    //         ? DateFormat('MMM d').format(task.dueDate!)
-    //         : "ND";
-    //     break;
-    //   case "cemetery":
-    //     label = null;
-    //     break;
-    //   case "title":
-    //     label = task.dueDate != null
-    //         ? DateFormat('MMM d').format(task.dueDate!)
-    //         : "ND";
-    //     break;
-    //   default:
-    //     throw UnimplementedError(
-    //         'Unhandled sorting parameter chosen for task viewing');
-    // }
+    String label = task.dueDate != null
+          ? DateFormat('MMM d').format(task.dueDate!)
+          : "ND";
 
     return Row(
       children: [
         Container(
-          // label on the left
           decoration: BoxDecoration(
-            //color: theme.colorScheme.primary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           child: Text(
-            label ?? "", // uses label if not null, else uses ""
-            style: theme.textTheme.titleMedium!.copyWith(
-              // color: theme.colorScheme.onPrimary,
-            ),
+            label,
+            style: theme.textTheme.titleMedium!.copyWith(),
           ),
         ),
+        SizedBox(width: 8),
         SizedBox(
-          // height: !isExpanded ? 25 : null,
-          width: 230, // task title width limitation
+          width: MediaQuery.of(context).size.width - 250,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: Text(
               task.title,
-              maxLines: !isExpanded ? 1 : 4, // Limit lines when collapsed
-              overflow: TextOverflow.ellipsis, // Add ellipsis if cropped
+              maxLines: !isExpanded ? 1 : 4,
+              overflow: TextOverflow.ellipsis,
               style: titleStyle,
               semanticsLabel: task.title,
             ),
           ),
         ),
-        // Flexible(
-        //   child: Tooltip(
-        //     message: task.title,
-        //     child: Container(
-        //       padding: EdgeInsets.symmetric(horizontal: 6),
-        //       child: Text(
-        //         task.title,
-        //         maxLines: !isExpanded ? 1 : 2,
-        //         overflow: TextOverflow.ellipsis,
-        //         style: titleStyle,
-        //         semanticsLabel: task.title,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Flexible(
-        //   child: Container(
-        //     padding: EdgeInsets.symmetric(horizontal: 6),
-        //     child: Text(
-        //       task.title,
-        //       maxLines: !isExpanded ? 1 : null, // Changez null au lieu de 2 quand étendu
-        //       overflow: !isExpanded ? TextOverflow.ellipsis : TextOverflow.visible, // Ajustez le comportement de l'overflow
-        //       style: titleStyle,
-        //       semanticsLabel: task.title,
-        //     ),
-        //   ),
-        // ),
-        Spacer(), // to push the expand/collapse button to the right
-        IconButton(
-          icon: Icon(
-            isExpanded ? Icons.expand_less : Icons.expand_more,
-            // color: theme.colorScheme.onPrimary,
+        Spacer(),
+        if (!isExpanded)
+          IconButton(
+            icon: Icon(Icons.expand_more),
+            onPressed: onExpandToggle,
+          )
+        else
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(Icons.expand_less),
+                onPressed: onExpandToggle,
+              ),
+              IconButton(
+                icon: Icon(Icons.visibility),
+                onPressed: onDetailView,
+              ),
+            ],
           ),
-          onPressed: onExpandToggle,
-        ),
       ],
     );
   }
@@ -297,49 +393,103 @@ class TaskCardThirdSection extends StatelessWidget {
                     // priority/importance level
                     crossAxisAlignment:
                         CrossAxisAlignment.start, // Align icon to top
+                    // children: [
+                    //   Icon(Icons.format_list_numbered),
+                    //   Padding(
+                    //     padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    //     child: Text(
+                    //       "priority ${task.importanceLevel}",
+                    //       style: contentStyle,
+                    //     ),
+                    //   ),
+                    //   // Event dates
+                    //   taskDateStr != null
+                    //       ? Row(
+                    //           children: [
+                    //             SizedBox(width: 20),
+                    //             Icon(Icons.event),
+                    //             Padding(
+                    //               padding: const EdgeInsets.symmetric(
+                    //                   horizontal: 4.0),
+                    //               child: Text(
+                    //                 taskDateStr,
+                    //                 style: contentStyle,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         )
+                    //       : Padding(padding: const EdgeInsets.all(0)),
+                    //   // Periodicity
+                    //   taskPeriodicityStr != null
+                    //       ? Row(
+                    //           children: [
+                    //             SizedBox(width: 20),
+                    //             Icon(Icons.event_repeat),
+                    //             Padding(
+                    //               padding: const EdgeInsets.symmetric(
+                    //                   horizontal: 4.0),
+                    //               child: Text(
+                    //                 taskPeriodicityStr,
+                    //                 style: contentStyle,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         )
+                    //       : Padding(padding: const EdgeInsets.all(0))
+                    // ],
                     children: [
                       Icon(Icons.format_list_numbered),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Text(
-                          "priority ${task.importanceLevel}",
-                          style: contentStyle,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text(
+                                  "priority ${task.importanceLevel}",
+                                  style: contentStyle,
+                                  softWrap: false,
+                                ),
+                              ),
+                              // Event dates
+                              taskDateStr != null
+                                ? Row(
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Icon(Icons.event),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        child: Text(
+                                          taskDateStr,
+                                          style: contentStyle,
+                                          softWrap: false,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox.shrink(),
+                              // Periodicity
+                              taskPeriodicityStr != null
+                                ? Row(
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Icon(Icons.event_repeat),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        child: Text(
+                                          taskPeriodicityStr,
+                                          style: contentStyle,
+                                          softWrap: false,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox.shrink()
+                            ],
+                          ),
                         ),
                       ),
-                      // Event dates
-                      taskDateStr != null
-                          ? Row(
-                              children: [
-                                SizedBox(width: 20),
-                                Icon(Icons.event),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  child: Text(
-                                    taskDateStr,
-                                    style: contentStyle,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Padding(padding: const EdgeInsets.all(0)),
-                      // Periodicity
-                      taskPeriodicityStr != null
-                          ? Row(
-                              children: [
-                                SizedBox(width: 20),
-                                Icon(Icons.event_repeat),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  child: Text(
-                                    taskPeriodicityStr,
-                                    style: contentStyle,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Padding(padding: const EdgeInsets.all(0))
                     ],
                   ),
                   SizedBox(height: 5),
