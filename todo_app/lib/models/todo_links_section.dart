@@ -24,7 +24,7 @@ class _TodoLinksSectionState extends State<TodoLinksSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Liens',
+              'Link',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

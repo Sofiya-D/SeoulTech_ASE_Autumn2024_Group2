@@ -93,16 +93,16 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           Divider(),
 
-          // Custom Repeating Period Settings
-          ListTile(
-            leading: Icon(Icons.calendar_month),
-            title: Text('Custom repeating period'),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              _showPeriodSettings(context); // Navigate to Period settings
-            },
-          ),
-          Divider(),
+          // // Custom Repeating Period Settings
+          // ListTile(
+          //   leading: Icon(Icons.calendar_month),
+          //   title: Text('Custom repeating period'),
+          //   trailing: Icon(Icons.chevron_right),
+          //   onTap: () {
+          //     _showPeriodSettings(context); // Navigate to Period settings
+          //   },
+          // ),
+          // Divider(),
 
           // About App
           ListTile(
@@ -314,25 +314,25 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // Custom Repeating Period Settings
-  void _showPeriodSettings(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Custom Repeating Period'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      }
-    );
-  }
+  // // Custom Repeating Period Settings
+  // void _showPeriodSettings(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Custom Repeating Period'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //             child: Text('OK'),
+  //           ),
+  //         ],
+  //       );
+  //     }
+  //   );
+  // }
 
   // About App Dialog
   void _showAboutDialog(BuildContext context) {

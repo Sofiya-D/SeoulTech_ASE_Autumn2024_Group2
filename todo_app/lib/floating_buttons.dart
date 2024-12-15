@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'settings_manager.dart';
 
 class FloatingButtons extends StatelessWidget {
-  const FloatingButtons({Key? key}) : super(key: key);
+  const FloatingButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
